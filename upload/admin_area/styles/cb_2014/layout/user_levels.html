@@ -1,0 +1,77 @@
+<div class="heading">
+    <h2>User Levels</h2>
+</div>
+{if $view=='view'}
+    <a class="btn btn-primary btn-sm pull-right" href="?mode=add">Add New Level <b>+</b></a>
+    <br>
+    <br>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Active</td>
+            <td>Users</td>
+            <td>Actions</td>
+        </tr>
+        {assign var=levels value=$userquery->get_levels()}
+        {section name=l loop=$levels}
+            <tr>
+                <td>{$levels[l].user_level_id}</td>
+                <td>{$levels[l].user_level_name}</td>
+                <td>{$levels[l].user_level_active}</td>
+                <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
+                <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">{lang code='remove'}</a>{/if}</td>
+            </tr>
+            {sectionelse}
+            <tr>
+                <td>No Levels Were Found</td>
+            </tr>
+        {/section}
+    </table>
+{elseif ($view=='edit' || $view=='add')}
+    <form method="post">
+        <h3>User Level Details</h3>
+        <div class="form-group">
+            <label for="level_name2">Level name</label>
+            <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
+            <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
+        </div>
+        {assign var='types' value=$userquery->get_level_types()}
+        {section name=t loop=$types}
+            <h3>{lang($types[t].user_permission_type_name)}</h3>
+            <div class="row">
+                {foreach from=$level_perms item=perm}
+                    {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1 myWell">
+                                    <div class="col-md-8 paddingTop">
+                                        <strong>{lang($perm.permission_name)}</strong><br/>
+                                        <small><em>{lang($perm.permission_description)}</em></small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {if in_array($perm.permission_name, ['allow_manage_user_level', 'admin_access']) && User::getInstance()->get('level') == $level_details.user_level_id}
+                                            <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
+                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                        {else}
+                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                        {/if}
+                                            <span class="lbl"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                    {foreachelse}
+                    <div>
+                        <div>
+                            <em>No Permission Found</em>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        {/section}
+        <input class="btn btn-primary btn-sm" type="submit" id="button" value="{if $view == 'add'}{lang('add')}{elseif $view=='edit'}{lang('edit')}{/if}"/>
+    </form>
+{/if}
+

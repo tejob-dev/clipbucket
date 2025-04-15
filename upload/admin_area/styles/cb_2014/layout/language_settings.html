@@ -1,0 +1,61 @@
+{if $edit_lang != 'yes'}
+    <div class="heading">
+        <h2>{lang('languages_settings')}</h2>
+    </div>
+    <div id="language_list">
+        {include file="$style_dir/blocks/language_list.html"}
+    </div>
+    <legend>Add Languages</legend>
+    <!-- language select option for translation -->
+    <div class="form-group">
+        <form id="formAdd" name="formAdd" method="post">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="nameAdd">{lang code='language_name'}</label>
+                    <div style="vertical-align: bottom;">
+                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label for="codeAdd">Language Code</label>
+                    <div style="vertical-align: bottom;">
+                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
+                        <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='add'}" id="add_language"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="div_restore_lang">
+        {include file="$style_dir/blocks/restorable_language_list.html"}
+    </div>
+    <form id="formDelete" name="formDelete" method="post">
+        <input name="id_delete" type="hidden" class="form-control" id="id_delete" />
+    </form>
+{else}
+    <div id="language_edit">
+        {include file="$style_dir/blocks/language_edit.html"}
+    </div>
+    <table class="table table-bordered table-striped manageUsersTable">
+        <tr>
+            <th class="col-md-2">Language key</th>
+            <th class="col-md-9">Translation</th>
+            <th class="col-md-1">Action</th>
+        </tr>
+        {section name=p_list loop=$lang_phrases}
+        <tr>
+            <td class="col-md-2">{$lang_phrases[p_list].language_key}</td>
+            <td class="col-md-9">
+                <span class="xedit" id="{$lang_phrases[p_list].id_language_key}">{display_clean($lang_phrases[p_list].translation)}</span>
+                <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id_language_key}" name="pk" value="{display_clean($lang_phrases[p_list].translation)}" style="display:none;">
+            </td>
+            <td class="col-md-1" style="text-align: center; vertical-align: middle;">
+                <span class="btn btn-success btn-xs edit_translation" title="{lang code='edit'}" id="edit-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}"><i class="glyphicon glyphicon-edit"></i></span>
+                <span class="glyphicon glyphicon-ok-circle confirm_update_translation" title="{lang code='confirm'}" id="ok-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>
+                <span class="glyphicon glyphicon-remove-circle cancel_translation" title="{lang code='cancel'}" id="remove-{$lang_phrases[p_list].id_language_key}" data-id="{$lang_phrases[p_list].id_language_key}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;"></span>
+            </td>
+        </tr>
+        {/section}
+    </table>
+    {include file="$style_dir/blocks/pagination.html"}
+{/if}

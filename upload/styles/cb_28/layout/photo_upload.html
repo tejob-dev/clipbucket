@@ -1,0 +1,131 @@
+<div id="uploadMessage"></div>
+<div class="clearfix photoupload-block">
+
+    <div class="cb-box container" id="mainUploadContainer">
+        <div class="progress-container allProgress hidden">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2" id="uploadedFilesInfo">
+                        <p>Uploaded 0 of 0</p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="progress">
+                            <div id="overallProgress" class="progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0;">
+                                <span class="sr-only">40% Complete (success)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pad-bottom video-info-container flat-tabs">
+            <ul class="nav nav-tabs uploaderTabs">
+                <li class="active">
+                    <a href="#file-upload" data-toggle="tab">
+                        {lang code="photo_upload_tab"}
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content uploadFormDiv">
+                <div class="tab-pane fade in active clearfix" id="file-upload">
+                    <div class="form_header">
+                        <div class="instructions alert alert-block alert-info">
+                            {lang(upload_right_guide_photo,$cbpage->get_page_link(3))}
+                        </div>
+                        <div class="clearfix" id="uploaderContainer">
+                            {if $selected_collection}
+                                <div class="alert alert-info" role="alert">
+                                    {ucfirst(lang('will_be_upload_into_collection', [ strtolower(lang('photos')), display_clean($selected_collection.collection_name)]))}
+                                </div>
+                            {else}
+                                <div class="row">
+                                    <div id="SelectionDIV" class="col-md-9">
+                                        {include file="$style_dir/blocks/collection_select_upload.html" }
+                                    </div>
+                                    {if User::getInstance()->hasPermission('allow_create_collection')}
+                                        <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
+                                            <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
+                                        </div>
+                                    {else}
+                                        <div class="col-md-3 text-center">
+                                            <div class="alert alert-danger">
+                                                <strong>{lang code="creating_collection_is_disabled"}</strong>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="manageCollection">
+                                <div id="CollectionDIV" style="display:none;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upload-area col-md-12 clearfix" {if !$collections}style="display:none;"{/if}/>
+                        <div class="fileUploaderForm">
+                            <div class="dragDropContainer clearfix" id="dragDrop">
+                                <span class="upload-logo"></span>
+                                <strong class="block-title">{lang code="drag_drop"}</strong>
+                                <p>
+                                    {lang(page_upload_photo_limits,$Cbucket->configs['max_photo_size'])}
+                                </p>
+                            </div>
+                            <div class="selectButtonContainer">
+                                <a id="selectFiles" href="javascript:;" class="btn btn-primary btn-lg selectFiles">{lang code="select_photos"}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                <div id="uploadDataContainer" class="uploadDataContainer clearfix marginTop">
+                    <div class="uploadingProgressContainer clearfix hidden">
+                        <div class="alert alert-block alert-info">
+                            <p>
+                                <small>
+                                    <span id="progressNumber" style="color:#fff;">0%</span> <span style="color:#fff;">{lang code="complete_of_photo"} </span>
+                                    <span id="videoNumber" style="color:#fff;"></span>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- the div for displaying progress bars -->
+                    <div class="realProgressBars"></div>
+                        <!-- the div for displaying progress bars -->
+                        <div class="align-right hidden" id="uploadMore">
+                            <a href="#" class="btn btn-primary uploadMorePhotos" id="uploadMorePhotos">{lang code="upload_more_photos"}</a>
+                        </div>
+                        <div class="marginTop">
+                            <div id="files"></div>
+                            <div id="allUploadForms" class="tab-content allUploadForms"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="photoForm" class="hidden">
+    {include file="$style_dir/blocks/upload/photo_form.html" }
+</div>
+
+{if $selected_collection}
+    <input type="hidden" name="cid" id="cid" class="cid" value="{$selected_collection.collection_id}">
+{/if}
+
+<script type="text/javascript">
+    var photo_extensions = '{","|implode:$cbphoto->exts}';
+    var theme = '{$theme}';
+    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+    var max_file_size ="{config('max_upload_size')}Mb";
+    var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
+    var collection_id = '{$selected_collection.collection_id}';
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|replace:"'": "\'"}');
+</script>

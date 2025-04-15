@@ -1,0 +1,141 @@
+<script type="text/javascript">
+    var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
+    var lang_quality = "{lang code='quality'}";
+    var video_id = "{$vdata.videoid}";
+    var autoplay = "{$player_params.autoplay}" === 'yes';
+    var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
+    var video_title = "{display_clean($vdata.title)}";
+</script>
+
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
+    {foreach $video_files as $file}
+        {if strpos($file, 'no_video.mp4') !== false}
+            <source src='{$file}' type="video/mp4"/>
+        {else}
+            {if $vdata['file_type']=='hls'}
+                <source src='{$file}' type="application/x-mpegURL"/>
+            {else}
+				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
+                <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
+            {/if}
+        {/if}
+    {/foreach}
+    {if config('player_subtitles')}
+        {$subtitles = get_video_subtitles($vdata)}
+        {if $subtitles}
+            {foreach $subtitles as $file}
+                <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+            {/foreach}
+        {/if}
+    {/if}
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+</video>
+
+<script type="text/javascript">
+    //player settings
+    var cb_player_setup = {
+        plugins : { },
+        "techOrder" : ['html5'],
+        "controls": true,
+        "autoplay": autoplay,
+        "muted": autoplay,
+        "preload": "auto",
+        "loop" : false,
+        "fluid": true,
+        "responsive": true,
+
+        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        controlBar: {
+            children: [
+                "PlayToggle", // Play/Pause
+                "VolumePanel", // Gestion du volume
+                "ProgressControl", // Barre de chargement
+                "RemainingTimeDisplay", // Temps restant
+                "PlaybackRateMenuButton", // Vitesse de lecture
+                "subsCapsButton", // Sous-titres
+                "audioTrackButton", //Pistes audio
+                "PictureInPictureToggle", // PictureInPicture
+                "FullscreenToggle" // Plein écran
+            ]
+        }
+    };
+
+    //Setting CallBack
+    var cb_vjs_callback = function(){
+
+        // PLUGIN : Clipbucket - Header
+        var header_options = {
+            uploader : video_uploader,
+            videotitle : video_title,
+            videoid : video_id
+        };
+        this.clipbucket_header(header_options);
+
+        // PLUGIN : Clipbucket - Controlbar Logo
+        if( "{config('control_bar_logo')}" === 'yes' ){
+            var controlbar_logo_options = {
+                branding_logo : "{config('control_bar_logo_url')}",
+                product_link : "{config('player_logo_url')}"
+            };
+            this.clipbucket_controlbar_logo(controlbar_logo_options);
+        }
+
+        // PLUGIN : Clipbucket - Volume
+        this.clipbucket_volume();
+
+        // PLUGIN : resolution MP4
+        {if $vdata['file_type'] == 'mp4'}
+        var res_options = {
+            default : "{CB_video_js::getDefaultVideo($video_files)}"
+        };
+        this.videoJsResolutionSwitcher(res_options);
+        {else}
+        this.hlsQualitySelector({
+            displayCurrentQuality: false,
+            vjsIconClass: 'vjs-icon-cog'
+        });
+        {/if}
+
+        {if config('contextual_menu_disabled') === 'yes'}
+        $(".video-js").on("contextmenu",function() {
+            return false;
+        });
+        {/if}
+
+        {if config('player_thumbnails') === 'yes'}
+        this.thumbnails({get_player_thumbs_json($vdata)});
+        {/if}
+    }
+
+    //Initializing
+    $(document).ready(function() {
+        var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+        {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
+            let video_fov = '{$vdata['fov']}';
+        {literal}
+            cb_player.vr({projection: video_fov});
+        {/literal}
+        {/if}
+
+        $('body').keydown(function(e)
+        {
+            if( $(document.activeElement).is('body') ||
+                $(document.activeElement).is('button.vjs-fullscreen-control') ||
+                $(document.activeElement).is('div.vjs-volume-menu-button') ||
+                $(document.activeElement).is('video') )
+            {
+                if( e.keyCode === 0 || e.keyCode === 32 )
+                {
+                    e.preventDefault();
+                    if( cb_player.paused() ){
+                        cb_player.play();
+                    } else {
+                        cb_player.pause();
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+

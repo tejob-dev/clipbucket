@@ -1,0 +1,616 @@
+{assign var='video_privacyoption' value=$Upload->loadOptionFields($data)}
+{assign var='video_datelocation' value=$Upload->loadLocationFields($data)}
+{assign var='custom_upload_fields' value=$Upload->load_custom_upload_fields($data,TRUE)}
+{assign var='video_fields' value=$Upload->loadRequiredFields($data)}
+
+{if $data.title neq ""}
+<script>
+    $(document).ready(function(){
+        $("#datecreated").datepicker({
+            format: 'yyyy-mm-dd' // TODO : Use config date_format
+        });
+    });
+</script>
+	<div class="row">
+		<div class="heading clearfix">
+            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; <span title="{display_clean($data.title)}">{display_clean($data.title)|truncate:80}</span></small>
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						Actions <span class="caret caret_margin"></span>
+					</button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="{videoLink vdetails=$data}">{lang code='watch'}</a></li>
+                        {if $data.active!='yes'}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
+                        {else}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
+                        {/if}
+
+                        {if $modedata!='featured'}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
+                        {else}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
+                        {/if}
+                        {if $video.status=='Successful'}
+                            {if config('chromecast')=='yes' && !$data.is_castable}
+                                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+                            {/if}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
+                            <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
+                            {if $data.embeded != 'yes'}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
+                            {/if}
+                        {/if}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
+                        {if config('enable_video_poster') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x', lang('posters')|lower)}</a></li>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x', lang('backdrops')|lower)}</a></li>
+                        {/if}
+
+                        {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
+                        {/if}
+                        <li><a href="edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
+                    </ul>
+				</div>
+			</h2>
+			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
+				<span class="btn btn-app btn-sm btn-light no-hover" title="{$data.views}">
+				    <span class="line-height-1 smaller-90 blue" >{$data.views|prettyNum}</span>
+                    <br/>
+                    <span class="line-height-1 smaller-90"> {lang('views')} </span>
+				</span>
+				<span class="btn btn-app btn-sm btn-pink no-hover">
+					<span class="line-height-1">
+					{if $data.active=='yes'}
+						<span class="glyphicon glyphicon-ok smaller-90"></span>
+					{else}
+						<span class="glyphicon glyphicon-remove"></span>
+					{/if}
+						<br/>
+						<span class="line-height-1 smaller-90"> Active</span>
+					</span>
+				</span>
+				<span class="btn btn-app btn-sm btn-grey no-hover">
+					<span class="line-height-1">
+					{if $modedata!='featured'}
+						<span class="glyphicon glyphicon-remove"></span>
+					{else}
+						<span class=" glyphicon glyphicon-ok smaller-90"></span>
+					{/if}
+						<br/>
+						<span class="line-height-1 smaller-90">Featured</span>
+					</span>
+				</span>
+				<span class="btn btn-app btn-sm btn-success no-hover">
+					<span class="line-height-1">
+					{if $data.in_editor_pick=='yes'}
+						<span class="glyphicon glyphicon-ok smaller-90"></span>
+					{else}
+						<span class="glyphicon glyphicon-remove"></span>
+					{/if}
+						<br>
+						<span class="line-height-1 smaller-90">Editor Pick</span>
+					</span>
+				</span>
+				<span class="btn btn-app btn-sm btn-primary no-hover">
+					<span class="line-height-1">
+					{if $data.flagged=='yes'}
+						<span class="glyphicon glyphicon-ok smaller-90"></span>
+					{else}
+						<span class="glyphicon glyphicon-remove"></span>
+					{/if}
+						<br>
+						<span class="line-height-1 smaller-90"> FLAGGED</span>
+					</span>
+				</span>
+			</div>
+		</div>
+        <form method="post" name="edit_video" enctype="multipart/form-data">
+            <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
+            <div class="col-md-6">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videodetail">
+                                <i class="glyphicon glyphicon-facetime-video"></i> Video Details
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#uinformation">
+                                <i class="glyphicon glyphicon-user"></i> Uploader Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#privacyoption">
+                                <i class="glyphicon glyphicon-eye-open"></i> {lang code='vdo_share_opt'}
+                            </a>
+                        </li>
+                        {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                            <li>
+                                <a data-toggle="tab" href="#datelocation">
+                                    <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
+                                </a>
+                            </li>
+                        {/if}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videodetail" class="tab-pane active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="myTable" style="width:100%;">
+                                        <tr>
+                                            <td class="first"><label>Video Id</label></td>
+                                            <td>
+                                                <p><span>{$data.videoid}</span></p>
+                                            </td>
+                                            {if config('enable_video_poster') == 'yes' && !empty($data.default_poster)}
+                                            <td rowspan="8">
+                                                <span class='default_poster' style="background-image:url({get_thumb($data, false, 'original', 'poster')});"></span>
+                                            </td>
+                                            {/if}
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Video Key</label></td>
+                                            <td>
+                                                <p><span>{$data.videokey}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>File Name</label></td>
+                                            <td>
+                                                <p><span>{$data.file_name}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Uploaded Date</label></td>
+                                            <td>
+                                                <p><span>{$data.date_added}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>{lang code='duration'}</label></td>
+                                            <td>
+                                                <p><span>{$data.duration|SetTime}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Total Video Files</label></td>
+                                            <td>
+                                                <p><span>{get_all_video_files vdetails=$data count_only=true}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first">
+                                                <label>{lang code='conversion_log'}</label>
+                                            </td>
+                                            <td>
+                                                <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Total images</label></td>
+                                            <td>
+                                                <p><span>{get_count_thumb($data['videoid'])}</span></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="uinformation" class="tab-pane">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <table class="myTable" style="width:100%;">
+                                        <tr>
+                                            <td class="first"><label>{lang code='username'}</label></td>
+                                            <td class="last">
+                                                <p><span>
+                                                    {if $data.userid != $anonymous_id}
+                                                        <a href="{$link_user}">{display_clean($data.user_username)}</a>
+                                                    {else}
+                                                        {display_clean(lang($data.user_username))}
+                                                    {/if}
+                                                </span></p>
+                                            </td>
+                                        </tr>
+                                        {if $data.userid != $anonymous_id}
+                                            <tr>
+                                                <td class="first"><label>DOB</label></td>
+                                                <td class="last">
+                                                    <p><span>{$uploader_info.dob}</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="first"><label>Email</label></td>
+                                                <td class="last">
+                                                    <p><span>{$uploader_info.email}</span></p>
+                                                </td>
+                                            </tr>
+                                            {if config('enable_gender') == 'yes'}
+                                            <tr>
+                                                <td class="first"><label>{lang code='gender'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{lang code="{$uploader_info.sex}"}</span></p>
+                                                </td>
+                                            </tr>
+                                            {/if}
+                                            <tr>
+                                                <td class="first"><label>{lang code='rating'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.rating}</span></p>
+                                                </td>
+                                            </tr>
+                                        {/if}
+                                    </table>
+                                </div>
+                                {if $data.userid != $anonymous_id}
+                                    <div class="col-md-2">
+                                        <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                        <div id="privacyoption" class="tab-pane">
+                            {foreach from=$video_privacyoption item=field}
+                            <div class="table">
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
+                                {/if}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
+                                {/if}
+                                {if $field.hint_1}
+                                    {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                            <div id="datelocation" class="tab-pane">
+                                {foreach from=$video_datelocation item=field}
+                                <div class="table">
+                                    {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                        {if empty($field.class)}
+                                            {$field.class = 'form-control'}
+                                        {else}
+                                            {$field.class = $field.class|cat:' form-control'}
+                                        {/if}
+                                    {/if}
+                                    <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                    {if $field.hint_1}
+                                        {$field.hint_1}<br/>
+                                    {/if}
+                                    {$formObj->createField($field)}
+                                    {if $field.hint_2}<br/>
+                                        {$field.hint_2}
+                                    {/if}
+                                </div>
+                                {/foreach}
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+                <div class="tabbable paddingTop">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videoinfos">
+                                <i class="glyphicon glyphicon-film"></i> {lang code='profile_basic_info'}
+                            </a>
+                        </li>
+                        {if config('enable_video_categories')=='yes'}
+                            <li>
+                                <a data-toggle="tab" href="#category">
+                                    <i class="glyphicon glyphicon-folder-open"></i> {lang code='categories'}
+                                </a>
+                            </li>
+                        {/if}
+                        <li>
+                            <a data-toggle="tab" href="#miscellaneous">
+                                <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
+                            </a>
+                        </li>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                            <li>
+                                <a data-toggle="tab" href="#movie_infos">
+                                    <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                                </a>
+                            </li>
+                        {/if}
+                        {if config('enable_comments_video') == 'yes'}
+                            <li>
+                                <a data-toggle="tab" href="#comments">
+                                    <i class="fa fa-comments"></i> {lang('comments')}
+                                </a>
+                            </li>
+                        {/if}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videoinfos" class="tab-pane active">
+                            {foreach from=$video_fields item=field}
+                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category'])}
+                                    {continue}
+                                {/if}
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label>
+                                {if $field.hint_1}
+                                    {$field.hint_1}
+                                {/if}
+                                <br>
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {if config('enable_video_categories')=='yes'}
+                            <div id="category" class="tab-pane">
+                                <div>
+                                    {if $video_fields.cat.type != 'checkbox' && $video_fields.cat.type != 'radiobutton' && $video_fields.cat.type != 'checkbox2'}
+                                        {if empty($video_fields.cat.class)}
+                                            {$video_fields.cat.class = 'form-control'}
+                                        {else}
+                                            {$video_fields.cat.class = $video_fields.cat.class|cat:' form-control'}
+                                        {/if}
+                                    {/if}
+                                    <label><strong>{$video_fields.cat.title|truncate:80}</strong></label><br>
+                                    {if $video_fields.cat.hint_1}
+                                        {$video_fields.cat.hint_1}
+                                    {/if}
+                                    <div class="tab-content scroll" style="border: 0;">
+                                        <div class="VideoCategory" style="{if !config('show_collapsed_checkboxes')}margin-top:-30px;{/if}">
+                                            {$formObj->createField($video_fields.cat)}
+                                            {if $video_fields.cat.hint_2}<br/>
+                                                {$video_fields.cat.hint_2}
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                            {/if}
+                        </div>
+                        <div id="miscellaneous" class="tab-pane">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="status"><strong>{lang code='vdo_status'}</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="status" id="status">
+                                        {foreach from=Video::getInstance()->getStatusList() item=status})}
+                                            <option class="form-control" value="{$status}" {if $data.status == $status} selected{/if} >{lang($status|strtolower)}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+
+                                {if config('enable_360_video') == 'yes'}
+                                <div class="col-md-2">
+                                    <label for="video_fov"><strong>{lang code='video_fov'}</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="video_fov" id="video_fov">
+                                        <option class="form-control" {if empty($data.fov)}selected{/if}></option>
+                                        <option class="form-control" value="180" {if $data.fov=='180'}selected{/if}>{lang('x_fov', 180)}</option>
+                                        <option class="form-control" value="360" {if $data.fov=='360'}selected{/if}>{lang('x_fov', 360)}</option>
+                                    </select>
+                                </div>
+                                {/if}
+                            </div>
+                            <hr/>
+
+                            <div class="row">
+                                <label><strong>Video Stats</strong></label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="rating">{lang code='rating'} :</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="rating" type="text" id="rating" value="{$data.rating|number_format}" size="5"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="rated_by">RatedBy :</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="rated_by" type="text" id="rated_by" value="{$data.rated_by|number_format}" size="45"/>
+                                </div>
+                            </div>
+                            {if count($custom_upload_fields) > 0}
+                            <hr/>
+                            <div class="row">
+                                {foreach from=$custom_upload_fields item=field}
+                                <div class="form-group">
+                                        <label><strong>{$field.title}</strong></label>
+                                        {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                            {if empty($field.class)}
+                                                {$field.class = 'form-control'}
+                                            {else}
+                                                {$field.class = $field.class|cat:' form-control'}
+                                            {/if}
+                                        {/if}
+                                        {$field.hint_1}<br/>
+                                        {ANCHOR place=$field.anchor_before}
+
+                                        {if $field.name=='embed_code'}
+                                            {if ($data.embed_code == '' || $data.embed_code == 'none' || $data.embed_code ==NULL)}
+                                                {$field.extra_tags='disabled="disabled"'}
+                                            {/if}
+                                        {/if}
+
+                                        {if $field.name=='remote_play_url'}
+                                            {if ($data.remote_play_url == '' || $data.remote_play_url == 'none' || $data.remote_play_url ==NULL)}
+                                                {$field.extra_tags=' disabled="disabled"'}
+                                            {/if}
+                                        {/if}
+
+                                        {$formObj->createField($field)}
+                                    {$field.hint_2}
+                                </div>
+                                {/foreach}
+                            </div>
+                            {/if}
+                        </div>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                            <div id="movie_infos" class="tab-pane">
+                                {foreach from=$video_fields item=field}
+                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                        {continue}
+                                    {/if}
+                                    <div class="table">
+                                        {$field.class='form-control'}
+                                        <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                        {if $field.hint_1}
+                                            {$field.hint_1}
+                                            <br/>
+                                        {/if}
+                                        {$formObj->createField($field)}
+                                        {if $field.id|strstr:'tags'}
+                                            <ul id="list_{$field.id}"></ul>
+                                        {/if}
+                                        {if $field.hint_2}
+                                            <br/>
+                                            {$field.hint_2}
+                                        {/if}
+                                    </div>
+                                {/foreach}
+                            </div>
+                        {/if}
+                        {if config('enable_comments_video') == 'yes'}
+                            <div id="comments" class="tab-pane">
+                                <div class="form-group">
+                                    {include file="$style_dir/blocks/comments.html"}
+                                </div>
+                            </div>
+                        {/if}
+                    </div>
+                    <div class="form-group alignCenter">
+                        <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videoplayer">
+                                <i class="glyphicon glyphicon-film"></i> Video player
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#thumbnails">
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('thumbnail'))|ucfirst}
+                            </a>
+                        </li>
+                        {if config('enable_video_poster') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#posters">
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('poster'))|ucfirst}
+                            </a>
+                        </li>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#backdrops">
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('backdrop'))|ucfirst}
+                            </a>
+                        </li>
+                        {/if}
+                        {if !empty($resolution_list)}
+                        <li>
+                            <a data-toggle="tab" href="#resolutions">
+                                <i class="glyphicon glyphicon-hdd"></i> {lang code='video_file_management'}
+                            </a>
+                        </li>
+                        {/if}
+                        {if !empty($subtitle_list)}
+                        <li>
+                            <a data-toggle="tab" href="#subtitiles">
+                                <i class="glyphicon glyphicon-subtitles"></i> {lang code='video_subtitle_management'}
+                            </a>
+                        </li>
+                        {/if}
+                        {if config('enable_video_view_history')=='yes'}
+                            <li>
+                                <a data-toggle="tab" href="#view_history">
+                                    <i class="fa fa-history"></i> {lang('video_list_view_video_history')}
+                                </a>
+                            </li>
+                        {/if}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videoplayer" class="tab-pane active">
+                            {include file="$style_dir/blocks/video_player.html"}
+                        </div>
+                        <div id="thumbnails" class="tab-pane">
+                            {include file="$style_dir/blocks/thumb_mini_list.html"}
+                        </div>
+                        {if config('enable_video_poster') == 'yes'}
+                        <div id="posters" class="tab-pane">
+                            {include file="$style_dir/blocks/poster_mini_list.html"}
+                        </div>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                        <div id="backdrops" class="tab-pane">
+                            {include file="$style_dir/blocks/backdrop_mini_list.html"}
+                        </div>
+                        {/if}
+                        {if !empty($resolution_list)}
+                        <div id="resolutions" class="tab-pane">
+                            {include file="$style_dir/blocks/resolution_list.html"}
+                        </div>
+                        {/if}
+                        {if !empty($subtitle_list)}
+                        <div id="subtitiles" class="tab-pane">
+                            {include file="$style_dir/blocks/subtitle_list.html"}
+                        </div>
+                        {/if}
+                        {if config('enable_video_view_history')=='yes'}
+                            <div id="view_history" class="tab-pane">
+                                <legend>{lang('video_list_view_video_history')}</legend>
+                                <div class="form-group" id="view_history_div">
+                                    {include file="$style_dir/blocks/video_view_history.html"}
+                                </div>
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<div class="modal fade" id="myModal" role="dialog">
+</div>
+<script>
+    var text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
+    var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
+    var videoid = '{$data.videoid}';
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var text_confirm_comment = '{lang('text_confirm_comment')}';
+    var text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
+    let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
+    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+</script>
+{/if}

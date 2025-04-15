@@ -1,0 +1,35 @@
+<div class="heading paddingBottomSmall">
+    <div class="form-group">
+        <h2>{lang($display_type)|capitalize} Categories
+            <div class="dropdown pull-right">
+                <button id="hideshow" class="btn btn-primary pull-right dropdown-toggle" data-toggle="dropdown">
+                    {lang code='add_new_category'}
+                </button>
+            </div>
+        </h2>
+    </div>
+</div>
+<div class="row" >
+    <div id="content"></div>
+</div>
+
+<div class="row">
+    <h4>Category List</h4>
+
+{if $total != 0}
+    <form  name="category" action="?update_order" method="post">
+        <div id="category_list">
+            {include file="$style_dir/blocks/category_list.html"}
+        </div>
+        <input type="submit" value="Update Category" name="update_order" class="btn btn-primary btn-sm" style="margin-top:10px;"/>
+    </form>
+{else}
+    No Category Has Been Created Yet
+{/if}
+</div>
+
+<script>
+    var category_id = '{$cat_details.category_id}';
+    var type = '{$type}';
+</script>
+

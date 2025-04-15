@@ -1,0 +1,71 @@
+<div class="heading">
+    <h2>Selected Player</h2>
+</div>
+<div>
+    {assign var="player_dir" value=$Cbucket->configs.player_dir}
+    {assign var="player_file" value=$Cbucket->configs.player_file}
+    {assign var="curplayer" value=$cbplayer->getPlayerDetails($player_file,$player_dir)}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alignCenter well">
+                        <img src="{$cbplayer->get_preview_thumb($curplayer.folder)}" class="img-thumbnail"/>
+                        <h3>{$curplayer.name}</h3>
+                        <em>
+                            {if $player.author_page}
+                                <a href="{$curplayer.author_page}"><strong>{$curplayer.author}</strong></a>
+                            {else}
+                                <strong>{$curplayer.author}</strong>
+                            {/if}
+                        </em>
+                        <p>{$curplayer.description}</p>
+                        <p>Version : {$curplayer.version}, Released on {$curplayer.released|date_format}</p>
+                        {if $curplayer.website}
+                            <p>Website : <a href="{$curplayer.website}">{$curplayer.website}</a></p>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="heading">
+    <h2>Available Players</h2>
+</div>
+<div>
+    {assign var='players' value=$cbplayer->getPlayers()}
+    <div class="templates_container">
+        <div class="row">
+            {foreach from=$players item=player}
+                {if $player_file !=$player.file && $player_dir != $player.folder}
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="well alignCenter">
+                                    <img src="{$cbplayer->get_preview_thumb($player.folder)}" class="img-thumbnail">
+                                    <h2>{$player.name}</h2>
+                                    <em>
+                                        {if $player.author_page}
+                                            <a href="{$player.author_page}"><strong>{$player.author}</strong></a>
+                                        {else}
+                                            <strong>{$player.author}</strong>
+                                        {/if}
+                                    </em>
+                                    <p>{$player.description}</p>
+                                    <p>Version : {$player.version}, Released on {$player.released|date_format}</p>
+                                    {if $player.website}
+                                        <p>Website : <a href="{$player.website}">{$player.website}</a></p>
+                                    {/if}
+                                    <p><a href="manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+            {/foreach}
+        </div>
+    </div>
+</div>

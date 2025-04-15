@@ -1,0 +1,205 @@
+{$videoFields = $Upload->load_video_fields($input)}
+{$requiredFields = $videoFields[0]}
+{$sharingOptions = $videoFields[1]}
+{$dateAndLocation = $videoFields[2]}
+{$custom_fields = $videoFields[4]}
+
+<div class="uploaderContainer clearfix" id="uploaderContainer">
+    <div class="upload-area col-md-12">
+
+        {if $selected_collection}
+            <div class="alert alert-info" role="alert">
+                {ucfirst(lang('will_be_upload_into_collection', [ strtolower(lang('videos')), display_clean($selected_collection.collection_name)]))}
+            </div>
+        {/if}
+
+        <div class="fileUploaderForm">
+            <div class="dragDropContainer" id="dragDrop">
+                <span class="upload-logo"></span>
+                <strong class="block-title">{lang code="drag_drop"}</strong>
+                <p>
+                    {lang(page_upload_video_limits, [$Cbucket->configs['max_upload_size'],$Cbucket->configs['max_video_duration']])}
+                </p>
+            </div>
+            <div class="selectButtonContainer">
+                <a id="selectFiles" href="javascript;" class="btn btn-primary btn-lg selectFiles">{lang code="page_upload_video_select"}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="uploadDataContainer" class="uploadDataContainer hidden">
+    <div class="uploadingProgressContainer"></div>
+    <div class="realProgressBars"></div>
+    <div class="align-right hidden" id="uploadMore">
+        <a href="#" class="btn btn-primary uploadMoreVideos" id="uploadMoreVideos">{lang code="upload_more_videos"}</a>
+    </div>
+    <div id="files">
+        <ul class="nav nav-tabs" id="selectedFilesList"></ul>
+    </div>
+    <div id="allUploadForms" class="tab-content allUploadForms"></div>
+</div>
+
+<form action="#" id="updateVideoInfoForm" class="template hidden" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="updateVideoInfo">
+                {ANCHOR place="before_upload_form_required_fields"}
+                <div class="requiredFields">
+                    {foreach $requiredFields.fields as $field}
+
+                        {$field.class='form-control'}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.type == 'radiobutton'}
+                            <div class="form-group">
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            </div>
+                        {elseif $field.type == 'checkbox'}
+                            {$categories = $field}
+                        {elseif $field.id == 'tags_video'}
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
+                                {$formObj->createField($field)}
+                                <ul id="list_{$field.id}"></ul>
+                            </div>
+                        {elseif !$field.id|strstr:'tags'}
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            </div>
+                        {/if}
+
+                    {/foreach}
+
+                    <div class="form-group hidden">
+                        <label for="duration">Duration</label>
+                        <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
+                    </div>
+                </div>
+
+                <div class="formSection clear">
+                    <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $requiredFields.fields as $field}
+                            {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                            {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
+                        <div class="form-group">
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
+                        </div>
+                            {/if}
+                        {/foreach}
+                    </div>
+                </div>
+                {ANCHOR place="after_upload_form_required_fields"}
+
+                {if $custom_flag && $custom_fields!=""}
+                    {ANCHOR place="before_upload_form_custom_fields"}
+                    <div class="formSection clear">
+                        <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                        <div class="sectionContent hidden">
+                            {foreach $custom_fields.fields as $field}
+                            <div class="form-group">
+                            {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                                {if $field.type == 'radiobutton'}
+                                    {$field.label_class='radio'}
+                                    {$field.class=''}
+                                    {$formObj->createField($field)}
+                                {elseif $field.type == 'checkbox'}
+                                    <h4>{$field.title}</h4>
+                                    {$field.label_class='checkbox'}
+                                    {$field.class='checkbox'}
+                                    {$formObj->createField($field)}
+                                {else}
+                                    <label for="{$field.id}">{$field.title}</label>
+                                    {$formObj->createField($field)}
+                                {/if}
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                    {ANCHOR place="after_upload_form_custom_fields"}
+                {/if}
+
+                {ANCHOR place="before_upload_form_location_fields"}
+                {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                <div class="formSection clear">
+                    <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $dateAndLocation.fields as $field}
+                        <div class="form-group">
+                        {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                            {if $field.type == 'radiobutton'}
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            {elseif $field.type == 'checkbox'}
+                                <h4>{$field.title}</h4>
+                                {$field.label_class='checkbox'}
+                                {$field.class='checkbox'}
+                                {$formObj->createField($field)}
+                            {else}
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            {/if}
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+                {/if}
+                {ANCHOR place="after_upload_form_location_fields"}
+
+                {ANCHOR place="before_upload_form_sharing_fields"}
+                <div class="formSection clear">
+                    <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $sharingOptions.fields as $field}
+                            <div class="form-group">
+                            {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                            {if $field.type == 'radiobutton'}
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            {else}
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            {/if}
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+                {ANCHOR place="after_upload_form_sharing_fields"}
+
+                {ANCHOR place="before_upload_form_submit"}
+                <div class="pad-bottom-sm text-right">
+                    <button class="btn btn-primary btn-lg saveVideoDetails">{lang code="submit_now"}</button>
+                </div>
+                {ANCHOR place="after_upload_form_submit"}
+            </div>
+        </div>
+        <div class="col-md-4" >
+        {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+            <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+        {/if}
+        </div>
+        {if config('enable_video_categories') != 'no'}
+            <div class="col-md-4 uploadFormSidebarDiv">
+                {ANCHOR place="before_upload_form_categories_field"}
+                <h4>{$categories.title}</h4>
+                <small>{$categories.hint_1}</small>
+                <div class="categoriesContainer">
+                    {$categories.label_class='checkbox'}
+                    {$categories.class='checkbox'}
+                    {$formObj->createField($categories)}
+                </div>
+                {ANCHOR place="after_upload_form_categories_field"}
+            </div>
+        {/if}
+    </div>
+</form>

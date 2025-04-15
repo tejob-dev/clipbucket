@@ -1,0 +1,10 @@
+{if $conversion_log}
+    <h2>Conversion log of {$videoDetails['title']}</h2>
+    <div class="row conversion_log">
+        <div class="col-md-12">
+            {$conversion_log}
+        </div>
+    </div>
+{else}
+    <em style="margin-left:10px;">Log file was not found</em>
+{/if}

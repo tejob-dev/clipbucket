@@ -1,0 +1,136 @@
+{
+  "version":"5.4.1",
+  "revision":"132",
+  "status":"stable",
+  "detail":[
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Update Smarty to version 3.1.39"
+        ,"Rename dbconnect.php to config.php"
+        ,"Cleanup code"
+        ,"Add config option to overwrite DB config values"
+        ,"Remove unused files"
+        ,"Update FR translations"
+        ,"Fix SQL structure <i>#167</i>, <i>#184</i>"
+        ,"Update readme"
+        ,"Implement proxy settings"
+        ,"Fix boolean configurations saving"
+        ,"Disable some conversion logs when not in DEV mode"
+        ,"Save comments without editing content"
+        ,"Fix ads configuration"
+        ,"Cleanup HTML"
+        ,"Update VideoJS ADS module (Not working yet but no more JS errors)"
+        ,"Update JQuery to version 3.6.0"
+        ,"Update PHP required version to 7.0"
+        ,"Remove unused Recaptcha lib"
+        ,"Add gitignore for photos"
+        ,"Add missing translation"
+        ,"Fix thumb generation and SD/HD video conversion <i>#172#</i>"
+        ,"Remove unused DB column"
+        ,"Change default avatar file"
+        ,"Fix videos and thumbs directories creation"
+        ,"Update compatibility to PHP 8.0.X"
+        ,"Update compatibility to MySQL 8.0.X"
+        ,"Remove unused DB fields"
+        ,"Fix installation process"
+      ]
+    }
+    ,{
+      "title":"Admin area",
+      "description":[
+        "Update changelogs display"
+        ,"Fix video bits colors update"
+        ,"Fix file upload and remove upload config saving"
+        ,"Add option to restrict email domains during registration"
+        ,"Fix website configuration tabs display"
+        ,"Fix members deletion"
+        ,"Update Video edit interface"
+        ,"Fix valid message displayed even if errors occured <i>#167#</i>"
+        ,"Update update checker"
+        ,"Update Bootstrap to version 3.4.1"
+        ,"Refactor assets directories"
+        ,"Fix current menu display"
+        ,"Use more translations"
+        ,"Fix jQuery 3.6.0 compatibility"
+        ,"Fix plugin installation"
+        ,"Include OpenSans font in sources"
+        ,"Update video conversion logs"
+        ,"Fix configs save"
+        ,"Fix video's date recorded save and display"
+        ,"Update user's date of birth, last login and last active display"
+        ,"Fix user's category deletion"
+        ,"Fix photo manager not showing informations when not using english translations"
+        ,"Fix changelog when allow_url_fopen is not enabled <i>#139</i>"
+        ,"Refactor video editing interface"
+        ,"Fix Dashboard todo list"
+        ,"Mass upload : fix video upload with Stay as mp4 option enabled"
+        ,"Refactor video resolutions settings"
+        ,"Add support for 1440p and 2160p (2K and 4K UHD resolutions)"
+        ,"Banned flag is now displayed on banned users"
+      ]
+    }
+  ,{
+      "title":"Front office",
+      "description":[
+        "Hide upload video menu and global upload menu if no option is available"
+        ,"Fix remote upload tab display when file upload is disabled"
+        ,"Fix email verification in signup form"
+        ,"Video upload : Correctly handle pre-save errors, fix cancel update message"
+        ,"Fix guest's comments"
+        ,"Fix search page double HTML encoding"
+        ,"Fix home page popup video height"
+        ,"Fix video manager"
+        ,"Video upload : Refactor video upload <i>#169</i>"
+        ,"Update Bootstrap to version 3.4.1"
+        ,"Fix user avatar update"
+        ,"Photo upload : Fix photo upload <i>#174</i>, <i>#177</i>, <i>#178</i>"
+        ,"Fix video temporary used on upload <i>#176</i>"
+        ,"Fix video upload with Stay as mp4 option enabled"
+        ,"Fix subscription"
+        ,"Fix user channel display"
+        ,"Fix friends listing"
+        ,"Use more translations"
+        ,"Fix banned user login"
+        ,"Banned users channel page can only be viewed by admins"
+        ,"Fix default video thumb display"
+      ]
+    }
+  ,{
+      "title": "Server",
+      "description": [
+        "Remove MP4Box // GPAC dependency"
+        ,"Add Ubuntu 21.04 installation script"
+        ,"Fix signup nginx vhost with SEO URLs"
+        ,"Fix signup apache htaccess with SEO URLs"
+        ,"Remove logs files in /upload/files/"
+        ,"Remove residual files in /upload/conversion_queue/"
+        ,"Remove log file in /upload/temp/"
+        ,"Update apache vhosts in installation scripts to support properly SEO URLs <i>#160</i>"
+        ,"Add missing PHP module"
+        ,"Add Debian 11 installation script"
+        ,"Update PHP configuration in installation scripts"
+        ,"Add missing lshw in installation scripts"
+        ,"Add CentOS 7 (PHP 7.4 + MySQL 8) installation script"
+        ,"Move development.dev file to temp directory"
+      ]
+    }
+  ,{
+      "title":"Plugin",
+      "description":[
+        "Update Global Announcement to CB5.4.1"
+      ]
+    }
+  ,{
+      "title":"Player",
+      "description":[
+        "Update VideoJS to version 7.17.3"
+        ,"Fix VideoJS player informations"
+        ,"Fix VideoJS player thumbnails sync"
+        ,"Update cast_sender lib"
+        ,"Add new option to choose default video resolution"
+        ,"Display resolution title instead of height"
+      ]
+    }
+  ]
+}

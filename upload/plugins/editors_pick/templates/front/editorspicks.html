@@ -1,0 +1,19 @@
+{if count($editor_picks) > 0}
+<div class="clearfix editorpick">
+	<div class="editorpick-holder">
+		<div id="ep_video_container">
+			{section name=e_list loop=$editor_picks max=1}
+				{include file="$style_dir/blocks/videos/video_block.html" video=$editor_picks[e_list]}
+			{/section}
+		</div>
+	</div>
+
+	<div class="editorpick-videos">
+		<div class="scrollable-area vscrollable">
+			{section name=e_list loop=$editor_picks}
+				{include file="$style_dir/blocks/videos/video.html" video=$editor_picks[e_list] display_type='featuredVideos_sidebar'}
+			{/section}
+		</div>
+	</div>
+</div>
+{/if}

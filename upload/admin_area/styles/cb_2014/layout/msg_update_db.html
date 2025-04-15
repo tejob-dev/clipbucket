@@ -1,0 +1,110 @@
+{if !$is_plugin_db && $show_core_update}
+    {if $current_updating}
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:100%;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {if $current_updating == 'core'}
+                        {lang code='core_updating'}
+                    {else}
+                        {lang code='db_updating'}
+                    {/if}
+                </li>
+            </ul>
+            <div id="progress_div" style="text-align:center;vertical-align:middle;display:none;">
+                <br/>
+                <div style="padding:6px;"><span id="pourcent"></span>%
+                    (<span id="done"></span> / <span id="total"></span>)
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {else}
+        {if !$need_db_update}
+            <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='msg' src="{$imageurl}/ok.png"/>
+                        {lang code='db_up_to_date'}
+                    </li>
+                </ul>
+            </div>
+        {else}
+            <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='warning' src="{$imageurl}/error.png"/>
+                        {$nb_db_update}
+                        <a style="cursor:pointer;" class="update_db">{lang code='update'}</a>
+                    </li>
+                </ul>
+            </div>
+        {/if}
+        {if $need_core_update}
+            <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='warning' src="{$imageurl}/error.png"/>
+                        {lang code='core_upgrade_avaible'}
+                        <a style="cursor:pointer;" class="update_core">{lang code='update'}</a>
+                    </li>
+                </ul>
+            </div>
+        {else}
+            <div class="alert alert-success alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='msg' src="{$imageurl}/ok.png"/>
+                        {lang code='core_up_to_date'}
+                    </li>
+                </ul>
+            </div>
+        {/if}
+    {/if}
+{else}
+    {if $current_updating}
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {lang code='db_updating'}
+                </li>
+            </ul>
+            <div id="progress_div" style="text-align:center;vertical-align:middle;display:none;">
+                <br/>
+                <div style="padding:6px;"><span id="pourcent"></span>%
+                    (<span id="done"></span> / <span id="total"></span>)
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {elseif !$need_db_update && !$is_plugin_db}
+        <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='msg' src="{$imageurl}/ok.png"/>
+                    {lang code='db_up_to_date'}
+                </li>
+            </ul>
+        </div>
+    {elseif $need_db_update}
+        <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {$nb_db_update}
+                    <a style="cursor:pointer;" class="update_db">{lang code='update'}</a>
+                </li>
+            </ul>
+        </div>
+    {/if}
+{/if}
+{if $launch_wip}
+    {include './msg_wip.html'}
+{/if}
