@@ -1,6 +1,6 @@
 # Utiliser une image Debian stable comme base
 FROM debian:stable-slim
-
+ 
 # Variables d'environnement pour le runtime
 ENV DOMAIN_NAME=clipbucket.local
 ENV MYSQL_PASSWORD=clipbucket_password
