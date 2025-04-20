@@ -28,6 +28,8 @@
 </script>
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
+    {var_dump($video_files)}
+    {exit()}
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
             <source src='{$file}' type="video/mp4"/>
