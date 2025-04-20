@@ -3,11 +3,18 @@ define('THIS_PAGE', 'watch_video');
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 User::getInstance()->hasPermissionOrRedirect('view_video');
-var_dump($_GET);
-exit();
+
 if(empty($_GET['vid'])){
     exit(lang('class_vdo_exist_err'));
 }
+
+$paramsInit = [];
+$paramsInit['vid'] = explode('?cf=', $_GET['vid'])[0];
+$paramsInit['cf'] = explode('?cf=', $_GET['vid'])[1] ?? '';
+$paramsInit['cfdecode'] = json_decode(base64_decode($paramsInit['cf']), true);
+
+var_dump($paramsInit);
+exit();
 
 $params = [];
 $params['videokey'] = $_GET['vid'];
