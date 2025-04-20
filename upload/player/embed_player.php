@@ -32,7 +32,7 @@ if(empty($paramsInit['cfdecode'])){
 }
 
 $params = [];
-$params['videokey'] = $_GET['vid'];
+$params['videokey'] = $paramsInit['vid']; //$_GET['vid'];
 $params['exist'] = true;
 $video_exists = Video::getInstance()->getOne($params);
 
