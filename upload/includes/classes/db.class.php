@@ -39,6 +39,8 @@ class Clipbucket_db
      */
     function connect(string $host = '', string $name = '', string $uname = '', string $pwd = '', string $port = '3306')
     {
+        // var_dump($host, $name, $uname, $pwd, $port);
+        // exit;
         try {
             if (empty($host)) {
                 $host = $this->db_host;
@@ -83,6 +85,7 @@ class Clipbucket_db
                 DiscordLog::sendDump($error);
                 throw new Exception($e);
             } else {
+                e(lang('technical_error'));
                 redirect_to('maintenance.php');
             }
         }
