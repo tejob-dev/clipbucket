@@ -1,3 +1,22 @@
+<style>
+	body {
+		background: black;
+	}
+
+	.vjs-fluid:not(.vjs-audio-only-mode) {
+		padding-top: 50% !important;
+		position:relative;
+		background-color: black;
+	}
+
+	.video-js .vjs-control-bar {
+		background-color: transparent;
+		/* border-top: 1px solid white; */
+		height: 3em;
+		margin-bottom: 1em;
+	}
+</style>
+
 <script type="text/javascript">
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
