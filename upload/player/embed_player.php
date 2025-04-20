@@ -11,10 +11,25 @@ if(empty($_GET['vid'])){
 $paramsInit = [];
 $paramsInit['vid'] = explode('?cf=', $_GET['vid'])[0];
 $paramsInit['cf'] = explode('?cf=', $_GET['vid'])[1] ?? '';
-$paramsInit['cfdecode'] = json_decode(base64_decode($paramsInit['cf']), true);
+try{
+    $paramsInit['cfdecode'] = json_decode(base64_decode($paramsInit['cf']), true);
+}catch(Exception $e){
+    exit("Invalid video link");
+}
 
-var_dump($paramsInit);
-exit();
+// var_dump($paramsInit);
+// exit();
+if(empty($paramsInit['cfdecode'])){
+    exit("Invalid video link");
+}else{
+    if(!empty($paramsInit['cfdecode']['subscribed']) && !empty($paramsInit['cfdecode']['uid'])){
+        if($paramsInit['cfdecode']['expireDate'] < date('Y-m-d H:i:s')){
+            exit("Invalink time");
+        }
+    }else{
+        exit("Invalink");
+    }
+}
 
 $params = [];
 $params['videokey'] = $_GET['vid'];
@@ -36,5 +51,7 @@ $autoplay = $_GET['autoplay'] ?? false;
 
 assign('video', $video);
 assign('autoplay', $autoplay);
+
+assign('paramsInit', $paramsInit['cfdecode']);
 
 Template('embed_player.html');
