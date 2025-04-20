@@ -3,7 +3,7 @@ define('THIS_PAGE', 'watch_video');
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 User::getInstance()->hasPermissionOrRedirect('view_video');
-
+exit($_GET);
 if(empty($_GET['vid'])){
     exit(lang('class_vdo_exist_err'));
 }
