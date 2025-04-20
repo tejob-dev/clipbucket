@@ -32,7 +32,8 @@ function show_player($param): bool
     //              } 
     //         }
     //      }
-
+    var_dump($param['paramsInit'], $param['paramsInit']['playerConfig']['player']['autoplay']);
+    exit();
     $param['autoplay'] = $param['paramsInit']['playerConfig']['player']['autoplay'];
 
     $param['player_config'] = $param['paramsInit'];

@@ -23,7 +23,7 @@ if(empty($paramsInit['cfdecode'])){
     exit("Invalid video link");
 }else{
     if(!empty($paramsInit['cfdecode']['subscribed']) && !empty($paramsInit['cfdecode']['uid'])){
-        if($paramsInit['cfdecode']['expireDate'] < date('Y-m-d H:i:s')){
+        if($paramsInit['cfdecode']['expireDate'] < gmdate('Y-m-d H:i:s')){
             exit("Invalink time");
         }
     }else{
