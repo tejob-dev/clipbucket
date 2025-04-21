@@ -130,7 +130,9 @@
             vjsIconClass: 'vjs-icon-hd',
             defaultQuality: '360'
         });
-        this.setQualityLevels("360");
+        this.videoJsResolutionSwitcher({
+            default : "360",
+        });
         {/if}
 
         {if config('contextual_menu_disabled') === 'yes'}
