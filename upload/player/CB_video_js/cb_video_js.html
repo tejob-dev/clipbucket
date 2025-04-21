@@ -134,7 +134,11 @@
             {if $player_config.subscribed == 1}
                 default : "1080"
             {else}
-                default : "360"
+                {if $v_quality[0] == '360p'}
+                    default : "360"
+                {elseif $v_quality[0] == '240p'}
+                    default : "240"
+                {/if}
             {/if}
         });
         {/if}

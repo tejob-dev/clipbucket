@@ -66,12 +66,22 @@ class CB_video_js
     public static function load_player($data): bool
     {
         $vdetails = $data['vdetails'];
+        $vquality = [];
 
         $video_play = get_video_files($vdetails,true);
-
-        var_dump($video_play);
-        exit();
+        if ($vdetails['file_type'] != 'mp4'){
+            $vurl = $video_play[0]['url'];
+            $content_url = file_get_contents(rtrim(config('base_url'), '/').$vurl);
+            if(preg_match('/360p/i', $content_url)){
+                $vquality[] = '360p';
+            }elseif(preg_match('/240p/i', $content_url)){
+                $vquality[] = '240p';
+            }elseif(preg_match('/1080p/i', $content_url)){
+                $vquality[] = '1080p';
+            }
+        }
         assign('video_files', $video_play);
+        assign('$v_quality', $vquality);
         assign('vdata',$vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
         Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
