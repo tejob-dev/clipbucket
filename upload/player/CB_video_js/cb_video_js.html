@@ -38,21 +38,14 @@
                     {if $player_config.subscribed == 1}
                         <source src='{$file}' type="application/x-mpegURL"/>
                     {else}
-                        {if $v_quality[0] == '360p'}
+                        {if in_array('360p', $v_quality)}
                         <source src='{str_replace('index.m3u8', 'video_360p.m3u8', $file)}' type="application/x-mpegURL"/>
                         <audio>
                             {foreach $v_audio as $audiov}
                             <source src='{str_replace('index.m3u8', $audiov, $file)}' type="application/x-mpegURL"/>
                             {/foreach}
                         </audio>
-                        {elseif $v_quality[0] == '240p'}
-                        <source src='{str_replace('index.m3u8', 'video_240p.m3u8', $file)}' type="application/x-mpegURL"/>
-                        <audio>
-                            {foreach $v_audio as $audiov}
-                            <source src='{str_replace('index.m3u8', $audiov, $file)}' type="application/x-mpegURL"/>
-                            {/foreach}
-                        </audio>
-                        {else}
+                        {elseif in_array('240p', $v_quality)}
                         <source src='{str_replace('index.m3u8', 'video_240p.m3u8', $file)}' type="application/x-mpegURL"/>
                         <audio>
                             {foreach $v_audio as $audiov}
