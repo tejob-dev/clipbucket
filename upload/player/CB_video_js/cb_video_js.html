@@ -66,6 +66,16 @@
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
 
+{if $vdata['file_type']=='hls'}
+    {if $player_config.subscribed == 0}
+        {foreach $v_audio as $audiov}
+            <audio id="audio_track" src="{str_replace('index.m3u8', $audiov, $videofile)}" type="application/x-mpegURL"></audio>
+            {break}
+        {/foreach}
+    {/if}
+{/if}
+
+
 <script type="text/javascript">
     //player settings
     var cb_player_setup = {
@@ -189,31 +199,25 @@
             cb_player.vr({projection: video_fov});
         {/literal}
         {/if}
-        {if $vdata['file_type']=='hls'}
-            {if $player_config.subscribed == 0}
-                var usersAudioTrackList = [
-                    {foreach $v_audio as $audiov}
-                    {
-                        id: '{$audiov}',
-                        kind: 'translation',
-                        label: 'Lang-{$audiov}',
-                        language: 'fr',
-                        audio:'{str_replace('index.m3u8', $audiov, $videofile)}',
-                        enabled: true
-                    },
-                    {/foreach}
-                ];
-                for(var i = 0; i < usersAudioTrackList.length; i++){
-                    // Create a track object.
-                    var track = new videojs.AudioTrack();
+        
 
-                    // Add the track to the player's audio track list.
-                    cb_player.audioTracks().addTrack(track);
-                }
-                cb_player.audioTracks()[0].enabled = true;
-                
-            {/if}
-        {/if}
+        var audio = document.getElementById('audio_track');
+
+        cb_player.ready(function() {
+            cb_player.on('play', function() {
+                audio.play();
+            });
+
+            cb_player.on('pause', function() {
+                audio.pause();
+            });
+
+            cb_player.on('ended', function() {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        });
+
         $('body').keydown(function(e)
         {
             if( $(document.activeElement).is('body') ||
