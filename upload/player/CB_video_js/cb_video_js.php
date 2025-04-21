@@ -81,8 +81,8 @@ class CB_video_js
                 $vquality[] = '1080p';
             }
 
-            if(preg_match('/^audio(.*?).m3u8$/i', $content_url, $matches)){
-                $vaudio[] = $matches[1];
+            if(preg_match_all('/#EXT-X-MEDIA:TYPE=AUDIO.*?URI="(audio_\d+\.m3u8)"/i', $content_url, $matches)){
+                $vaudio = array_merge($vaudio, $matches[1]);
             }
         }
         var_dump($vaudio);
