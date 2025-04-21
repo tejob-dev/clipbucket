@@ -125,22 +125,36 @@
         };
         this.videoJsResolutionSwitcher(res_options);
         {else}
-        this.hlsQualitySelector({
-            displayCurrentQuality: false,
-            vjsIconClass: 'vjs-icon-hd',
-            defaultQuality: '360'
-        });
-        this.videoJsResolutionSwitcher({
             {if $player_config.subscribed == 1}
-                default : "1080"
+                this.hlsQualitySelector({
+                    displayCurrentQuality: false,
+                    vjsIconClass: 'vjs-icon-hd',
+                    defaultQuality: '360'
+                });
+                this.videoJsResolutionSwitcher({
+                    {if $player_config.subscribed == 1}
+                        default : "1080"
+                    {else}
+                        {if $v_quality[0] == '360p'}
+                            default : "360"
+                        {elseif $v_quality[0] == '240p'}
+                            default : "240"
+                        {/if}
+                    {/if}
+                });
             {else}
-                {if $v_quality[0] == '360p'}
-                    default : "360"
-                {elseif $v_quality[0] == '240p'}
-                    default : "240"
-                {/if}
+                this.videoJsResolutionSwitcher({
+                    {if $player_config.subscribed == 1}
+                        default : "1080"
+                    {else}
+                        {if $v_quality[0] == '360p'}
+                            default : "360"
+                        {elseif $v_quality[0] == '240p'}
+                            default : "240"
+                        {/if}
+                    {/if}
+                });
             {/if}
-        });
         {/if}
 
         {if config('contextual_menu_disabled') === 'yes'}

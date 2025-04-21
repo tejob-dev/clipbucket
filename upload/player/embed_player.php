@@ -19,7 +19,7 @@ try{
 
 // var_dump($paramsInit);
 // exit();
-if(empty($paramsInit['cfdecode'])){
+if(!isset($paramsInit['cfdecode'])){
     exit("Invalid video link");
 }else{
     if(isset($paramsInit['cfdecode']['subscribed']) && isset($paramsInit['cfdecode']['uid'])){
