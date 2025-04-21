@@ -35,7 +35,21 @@
             <source src='{$file}' type="video/mp4"/>
         {else}
             {if $vdata['file_type']=='hls'}
-                <source src='{$file}' type="application/x-mpegURL"/>
+                    {if $player_config.subscribed == 1}
+                        <source src='{$file}' type="application/x-mpegURL"/>
+                    {else}
+                        {if $v_quality[0] == '360p'}
+                        <source src='{str_replace('index.m3u8', 'video_360p.m3u8', $file)}' type="application/x-mpegURL"/>
+                        <audio>
+                            <source src='{str_replace('index.m3u8', 'audio.m3u8', $file)}' type="application/x-mpegURL"/>
+                          </audio>
+                        {elseif $v_quality[0] == '240p'}
+                        <source src='{str_replace('index.m3u8', 'video_240p.m3u8', $file)}' type="application/x-mpegURL"/>
+                        <audio>
+                            <source src='{str_replace('index.m3u8', 'audio.m3u8', $file)}' type="application/x-mpegURL"/>
+                          </audio>
+                        {/if}
+                    {/if}
             {else}
 				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
                 <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
@@ -90,6 +104,7 @@
                 "VolumePanel", // Gestion du volume
                 "ProgressControl", // Barre de chargement
                 "RemainingTimeDisplay", // Temps restant
+                "audioTrackButton", //Pistes audio
             ]
             {/if}
         }

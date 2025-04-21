@@ -67,6 +67,7 @@ class CB_video_js
     {
         $vdetails = $data['vdetails'];
         $vquality = [];
+        $vaudio = [];
 
         $video_play = get_video_files($vdetails,true);
         if ($vdetails['file_type'] != 'mp4'){
@@ -79,9 +80,16 @@ class CB_video_js
             }elseif(preg_match('/1080p/i', $content_url)){
                 $vquality[] = '1080p';
             }
+
+            if(preg_match('/audio(.*?).m3u8/i', $content_url, $matches)){
+                $vaudio[] = $matches[1];
+            }
         }
+        var_dump($vaudio);
+        exit();
         assign('video_files', $video_play);
         assign('$v_quality', $vquality);
+        assign('$v_audio', $vaudio);
         assign('vdata',$vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
         Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
