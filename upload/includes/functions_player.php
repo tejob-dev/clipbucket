@@ -36,7 +36,7 @@ function show_player($param): bool
     // exit();
     $param['autoplay'] = $param['paramsInit']['playerConfig']['player']['autoplay'];
 
-    $param['player_config'] = $param['paramsInit'];
+    assign('player_config', $param['paramsInit']);
     assign('player_params', $param);
 
     $funcs = $Cbucket->actions_play_video;

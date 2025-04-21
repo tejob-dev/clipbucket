@@ -25,13 +25,11 @@
     var autoplay = "{$player_params.autoplay}" === 'yes';
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
+    var subscribed = "{$player_config.subscribed}";
 </script>
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
-    <?php 
-    var_dump($video_files);
-    exit();
-    ?>
+    
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
             <source src='{$file}' type="video/mp4"/>
@@ -44,12 +42,14 @@
             {/if}
         {/if}
     {/foreach}
-    {if config('player_subtitles')}
-        {$subtitles = get_video_subtitles($vdata)}
-        {if $subtitles}
-            {foreach $subtitles as $file}
-                <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
-            {/foreach}
+    {if $player_config.subscribed == 1}
+        {if config('player_subtitles')}
+            {$subtitles = get_video_subtitles($vdata)}
+            {if $subtitles}
+                {foreach $subtitles as $file}
+                    <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+                {/foreach}
+            {/if}
         {/if}
     {/if}
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
@@ -68,8 +68,11 @@
         "fluid": true,
         "responsive": true,
 
-        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        {if $player_config.subscribed == 1}
+            playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        {/if}
         controlBar: {
+            {if $player_config.subscribed == 1}
             children: [
                 "PlayToggle", // Play/Pause
                 "VolumePanel", // Gestion du volume
@@ -81,6 +84,14 @@
                 "PictureInPictureToggle", // PictureInPicture
                 "FullscreenToggle" // Plein écran
             ]
+            {else}
+            children: [
+                "PlayToggle", // Play/Pause
+                "VolumePanel", // Gestion du volume
+                "ProgressControl", // Barre de chargement
+                "RemainingTimeDisplay", // Temps restant
+            ]
+            {/if}
         }
     };
 
@@ -116,8 +127,9 @@
         {else}
         this.hlsQualitySelector({
             displayCurrentQuality: false,
-            vjsIconClass: 'vjs-icon-cog'
-        });
+            vjsIconClass: 'vjs-icon-hd',
+            defaultQuality: '360'
+        }).setQualityLevels("360");
         {/if}
 
         {if config('contextual_menu_disabled') === 'yes'}
