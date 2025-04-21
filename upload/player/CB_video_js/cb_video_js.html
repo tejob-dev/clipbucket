@@ -210,6 +210,13 @@
                     },
                     {/foreach}
                 ];
+                for(var i = 0; i < usersAudioTrackList.length; i++){
+                    // Create a track object.
+                    var track = new videojs.AudioTrack();
+
+                    // Add the track to the player's audio track list.
+                    cb_player.audioTracks().addTrack(track);
+                }
             {/if}
         {/if}
         $('body').keydown(function(e)
