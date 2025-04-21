@@ -29,7 +29,7 @@
 </script>
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
-    
+    {$videofile = ""}
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
             <source src='{$file}' type="video/mp4"/>
@@ -38,6 +38,7 @@
                     {if $player_config.subscribed == 1}
                         <source src='{$file}' type="application/x-mpegURL"/>
                     {else}
+                        {$videofile = $file}
                         {if in_array('360p', $v_quality)}
                         <source src='{str_replace('index.m3u8', 'video_360p.m3u8', $file)}' type="application/x-mpegURL"/>
                         <audio>
@@ -111,14 +112,6 @@
                 "audioTrackButton", //Pistes audio
             ]
             {/if}
-        },
-        "hls": {
-            // Add audio renditions
-            audioOnlyRenditions: [{
-                src: '/files/videos/2025/04/13/1744547764ff593/audio_1.m3u8',
-                type: 'application/x-mpegURL',
-                name: 'Alternative Audio'
-            }]
         }
     };
 
@@ -204,7 +197,21 @@
             cb_player.vr({projection: video_fov});
         {/literal}
         {/if}
-        cb_player.audioTracks()
+        {if $vdata['file_type']=='hls'}
+            {if $player_config.subscribed == 0}
+                var usersAudioTrackList = [
+                    {foreach $v_audio as $audiov}
+                    {
+                        id: '{$audiov}',
+                        kind: 'translation',
+                        label: 'Lang-{$audiov}',
+                        language: 'fr',
+                        audio:'{str_replace('index.m3u8', $audiov, $videofile)}',
+                    },
+                    {/foreach}
+                ];
+            {/if}
+        {/if}
         $('body').keydown(function(e)
         {
             if( $(document.activeElement).is('body') ||
