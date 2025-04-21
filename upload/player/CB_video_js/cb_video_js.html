@@ -112,7 +112,7 @@
             ]
             {/if}
         },
-        hls: {
+        "hls": {
             // Add audio renditions
             audioOnlyRenditions: [{
                 src: '/files/videos/2025/04/13/1744547764ff593/audio_1.m3u8',
@@ -204,7 +204,7 @@
             cb_player.vr({projection: video_fov});
         {/literal}
         {/if}
-
+        cb_player.audioTracks()
         $('body').keydown(function(e)
         {
             if( $(document.activeElement).is('body') ||
