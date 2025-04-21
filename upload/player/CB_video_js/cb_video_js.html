@@ -199,6 +199,7 @@
                         label: 'Lang-{$audiov}',
                         language: 'fr',
                         audio:'{str_replace('index.m3u8', $audiov, $videofile)}',
+                        enabled: true
                     },
                     {/foreach}
                 ];
@@ -209,6 +210,8 @@
                     // Add the track to the player's audio track list.
                     cb_player.audioTracks().addTrack(track);
                 }
+                cb_player.audioTracks()[0].enabled = true;
+                
             {/if}
         {/if}
         $('body').keydown(function(e)
