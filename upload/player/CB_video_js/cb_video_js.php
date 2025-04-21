@@ -85,8 +85,8 @@ class CB_video_js
                 $vaudio = array_merge($vaudio, $matches[1]);
             }
         }
-        var_dump($vaudio);
-        exit();
+        // var_dump($vaudio);
+        // exit();
         assign('video_files', $video_play);
         assign('$v_quality', $vquality);
         assign('$v_audio', $vaudio);
