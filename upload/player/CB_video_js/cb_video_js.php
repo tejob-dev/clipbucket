@@ -88,8 +88,8 @@ class CB_video_js
         // var_dump($vaudio);
         // exit();
         assign('video_files', $video_play);
-        assign('$v_quality', $vquality);
-        assign('$v_audio', $vaudio);
+        assign('v_quality', $vquality);
+        assign('v_audio', $vaudio);
         assign('vdata',$vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
         Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
