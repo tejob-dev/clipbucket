@@ -70,7 +70,7 @@ class CB_video_js
 
         $video_play = get_video_files($vdetails,true);
         if ($vdetails['file_type'] != 'mp4'){
-            $vurl = $video_play[0]['url'];
+            $vurl = $video_play[0];
             $content_url = file_get_contents(rtrim(config('base_url'), '/').$vurl);
             if(preg_match('/360p/i', $content_url)){
                 $vquality[] = '360p';
