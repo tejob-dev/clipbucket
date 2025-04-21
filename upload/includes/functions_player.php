@@ -32,7 +32,7 @@ function show_player($param): bool
     //              } 
     //         }
     //      }
-    // var_dump($param['paramsInit'], $param['paramsInit']['playerConfig']['player']['autoplay']);
+    // var_dump($video_files);
     // exit();
     $param['autoplay'] = $param['paramsInit']['playerConfig']['player']['autoplay'];
 

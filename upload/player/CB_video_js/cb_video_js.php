@@ -69,6 +69,8 @@ class CB_video_js
 
         $video_play = get_video_files($vdetails,true);
 
+        var_dump($video_play);
+        exit();
         assign('video_files', $video_play);
         assign('vdata',$vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());

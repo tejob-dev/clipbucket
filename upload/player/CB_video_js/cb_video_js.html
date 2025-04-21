@@ -131,7 +131,11 @@
             defaultQuality: '360'
         });
         this.videoJsResolutionSwitcher({
-            default : "360",
+            {if $player_config.subscribed == 1}
+                default : "1080"
+            {else}
+                default : "360"
+            {/if}
         });
         {/if}
 
