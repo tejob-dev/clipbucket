@@ -51,7 +51,14 @@
                             {foreach $v_audio as $audiov}
                             <source src='{str_replace('index.m3u8', $audiov, $file)}' type="application/x-mpegURL"/>
                             {/foreach}
-                          </audio>
+                        </audio>
+                        {else}
+                        <source src='{str_replace('index.m3u8', 'video_240p.m3u8', $file)}' type="application/x-mpegURL"/>
+                        <audio>
+                            {foreach $v_audio as $audiov}
+                            <source src='{str_replace('index.m3u8', $audiov, $file)}' type="application/x-mpegURL"/>
+                            {/foreach}
+                        </audio>
                         {/if}
                     {/if}
             {else}
