@@ -35,18 +35,7 @@
             <source src='{$file}' type="video/mp4"/>
         {else}
             {if $vdata['file_type']=='hls'}
-                    {if $player_config.subscribed == 1}
-                        <source src='{$file}' type="application/x-mpegURL"/>
-                    {else}
-                        {$videofile = $file}
-                        {if in_array('360p', $v_quality)}
-                        <source src='{$file}' type="application/x-mpegURL"/>
-                        
-                        {elseif in_array('240p', $v_quality)}
-                        <source src='{$file}' type="application/x-mpegURL"/>
-                       
-                        {/if}
-                    {/if}
+                <source src='{$file}' type="application/x-mpegURL"/>
             {else}
 				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
                 <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
@@ -193,23 +182,22 @@
         {/if}
         
 
-        cb_player.ready(function () {
-            cb_player.tech(true).vhs.selectPlaylist = function () {
-            var playlists = cb_player.tech(true).vhs.representations();
-
-            // Disable all other video renditions except 640x360
-                playlists.forEach(function(rep) {
-                    if (rep.height !== 360) {
-                    rep.enabled(false);
-                    } else {
-                    rep.enabled(true);
-                    }
+        {if $vdata['file_type']=='hls'}
+            {if $player_config.subscribed == 0}
+                cb_player.ready(function () {
+                    cb_player.tech(true).vhs.selectPlaylist = function () {
+                    var playlists = cb_player.tech(true).vhs.representations();
+                        playlists.forEach(function(rep) {
+                            if (rep.height !== 360) {
+                            rep.enabled(false);
+                            } else {
+                            rep.enabled(true);
+                            }
+                        });
+                    };
                 });
-            };
-
-            // Optionally: autoplay
-            // player.play();
-        });
+            {/if}
+        {/if}
 
         $('body').keydown(function(e)
         {
