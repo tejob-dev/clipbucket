@@ -454,7 +454,7 @@
 
         //Event Handlers
         function doubleClickHandler(e){
-            console.log(`current time: ${video.currentTime}`);
+            console.log("current time: "+video.currentTime);
             const videoWidth = video.offsetWidth;
             (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
         }
