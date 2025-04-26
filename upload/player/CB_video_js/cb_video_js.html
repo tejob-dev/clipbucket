@@ -183,7 +183,7 @@
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
     var video_id = "{$vdata.videoid}";
-    var autoplay = { if $player_config.subscribed == 1 } 'yes' == 'yes' {else } 'no' == 'yes' {/if };
+    var autoplay = {if $player_config.subscribed == 1 } 'yes' == 'yes' {else} 'no' == 'yes' {/if}
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
     var subscribed = "{$player_config.subscribed}";
@@ -244,16 +244,16 @@
         "fluid": true,
         "responsive": true,
         
-        { if $player_config.subscribed == 1}
-    "enableSmoothSeeking": true,
-        "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
-            "loop" : true,
-                { else}
-    "loop" : false,
+        {if $player_config.subscribed == 1}
+            "enableSmoothSeeking": true,
+            "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
+            "loop": true,
+        {else}
+            "loop": false,
         {/if}
-    controlBar: {
-        { if $player_config.subscribed == 1}
-        children: [
+        "controlBar": {
+            { if $player_config.subscribed == 1}
+            "children": [
             "PlayToggle", // Play/Pause
             "VolumePanel", // Gestion du volume
             "ProgressControl", // Barre de chargement
@@ -264,8 +264,8 @@
             "PictureInPictureToggle", // PictureInPicture
             "FullscreenToggle" // Plein écran
         ]
-        {else }
-        children: [
+        {else}
+        "children": [
             "PlayToggle", // Play/Pause
             "VolumePanel", // Gestion du volume
             "ProgressControl", // Barre de chargement
