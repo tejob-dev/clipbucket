@@ -1,67 +1,242 @@
 <style>
-	body {
-		background: black;
-	}
+    body {
+        background: black;
+    }
 
-	.vjs-fluid:not(.vjs-audio-only-mode) {
-		padding-top: 50% !important;
-		position:relative;
-		background-color: black;
-		height: 100vh !important;
-	}
+    .vjs-fluid:not(.vjs-audio-only-mode) {
+        padding-top: 50% !important;
+        position: relative;
+        background-color: black;
+        height: 100vh !important;
+    }
 
-	.video-js .vjs-control-bar {
-		background-color: transparent;
-		/* border-top: 1px solid white; */
-		height: 3em;
-		margin-bottom: 1em;
-	}
+    .video-js .vjs-control-bar {
+        background-color: transparent;
+        /* border-top: 1px solid white; */
+        height: 3em;
+        margin-bottom: 1em;
+    }
+
+    html {
+        box-sizing: border-box;
+        font-family: 'Helvetica';
+    }
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        background: #7A419B;
+        min-height: 100vh;
+        background: #fff;
+        background-size: cover;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .player {
+        width: 100%;
+        border: 5px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+        font-size: 0;
+        overflow: hidden;
+    }
+
+    video {
+        width: 100%;
+        max-width: 750px;
+        display: block;
+    }
+
+    .video-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .video-forward-notify {
+        text-align: center;
+        width: 100%;
+        height: 200%;
+        border-radius: 100% 0 0 100%;
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        right: -50%;
+        top: -50%;
+    }
+
+    .video-forward-notify .icon {
+        justify-content: flex-start;
+        align-items: center;
+        margin: auto 0 auto 15%;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    .video-rewind-notify {
+        text-align: center;
+        width: 100%;
+        height: 200%;
+        border-radius: 0 100% 100% 0;
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        left: -50%;
+        top: -50%;
+    }
+
+    .video-rewind-notify .icon {
+        justify-content: flex-start;
+        align-items: center;
+        margin: auto 0 auto 60%;
+        color: rgba(255, 255, 255, 1);
+    }
+
+    .icon i {
+        display: block;
+    }
+
+    .notification {
+        transition: background 0.8s;
+        background: rgba(200, 200, 200, .4) radial-gradient(circle, transparent 1%, rgba(200, 200, 200, .4) 1%) center/15000%;
+        pointer-events: none;
+        display: none;
+    }
+
+    i {
+        font-style: normal;
+    }
+
+    .animate-in {
+        display: flex;
+        animation: ripple 1s forwards;
+    }
+
+    .animate-in i {
+        display: block;
+    }
+
+    .animate-in.forward i {
+        padding-bottom: 2px;
+    }
+
+    .animate-in.forward i {
+        animation: fadeInLeft .7s;
+    }
+
+    .animate-in.rewind i {
+        animation: fadeInRight .7s;
+    }
+
+    @keyframes ripple {
+        0% {
+            background-color: rgba(200, 200, 200, .4);
+            background-size: 100%;
+            transition: background 0s;
+            opacity: 1;
+        }
+
+        100% {
+            transition: background 0.8s;
+            background: rgba(200, 200, 200, .4) radial-gradient(circle, transparent 1%, rgba(200, 200, 200, .4) 1%) center/15000%;
+            display: flex;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeInLeft {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        0% {
+            opacity: 0;
+            transform: translateX(0px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(-20px);
+        }
+    }
+
+    span {
+        font-size: 12px;
+    }
 </style>
 
 <script type="text/javascript">
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
     var video_id = "{$vdata.videoid}";
-    var autoplay = {if $player_config.subscribed==1} 'yes' == 'yes' {else} 'no' == 'yes' {/if};
+    var autoplay = { if $player_config.subscribed == 1 } 'yes' == 'yes' {else } 'no' == 'yes' {/if };
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
     var subscribed = "{$player_config.subscribed}";
 </script>
 
-<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause"
+    height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
     {$videofile = ""}
     {foreach $video_files as $file}
-        {if strpos($file, 'no_video.mp4') !== false}
-            <source src='{$file}' type="video/mp4"/>
-        {else}
-            {if $vdata['file_type']=='hls'}
-                <source src='{$file}' type="application/x-mpegURL"/>
-            {else}
-				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
-                <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
-            {/if}
-        {/if}
+    {if strpos($file, 'no_video.mp4') !== false}
+    <source src='{$file}' type="video/mp4" />
+    {else}
+    {if $vdata['file_type']=='hls'}
+    <source src='{$file}' type="application/x-mpegURL" />
+    {else}
+    {$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
+    <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}" />
+    {/if}
+    {/if}
     {/foreach}
     {if $player_config.subscribed == 1}
-        {if config('player_subtitles')}
-            {$subtitles = get_video_subtitles($vdata)}
-            {if $subtitles}
-                {foreach $subtitles as $file}
-                    <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
-                {/foreach}
-            {/if}
-        {/if}
+    {if config('player_subtitles')}
+    {$subtitles = get_video_subtitles($vdata)}
+    {if $subtitles}
+    {foreach $subtitles as $file}
+    <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+    {/foreach}
     {/if}
-    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+    {/if}
+    {/if}
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a
+            href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
+<div class="video-rewind-notify rewind notification">
+    <div class="rewind-icon icon">
+        <i class="left-triangle triangle">◀◀◀</i>
+        <span class="rewind">10 seconds</span>
+    </div>
+</div>
+<div class="video-forward-notify forward notification">
+    <div class="forward-icon icon">
+        <i class="right-triangle triangle">▶▶▶</i>
+        <span class="forward">10 seconds</span>
+    </div>
+</div>
 
 
 
 <script type="text/javascript">
     //player settings
     var cb_player_setup = {
-        plugins : { },
-        "techOrder" : ['html5'],
+        plugins: {},
+        "techOrder": ['html5'],
         "controls": true,
         "autoplay": autoplay,
         // "muted": autoplay,
@@ -69,54 +244,54 @@
         "fluid": true,
         "responsive": true,
         
-        {if $player_config.subscribed == 1}
-            "enableSmoothSeeking": true,
-            "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
+        { if $player_config.subscribed == 1}
+    "enableSmoothSeeking": true,
+        "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
             "loop" : true,
-        {else}
-            "loop" : false,
+                { else}
+    "loop" : false,
         {/if}
-        controlBar: {
-            {if $player_config.subscribed == 1}
-            children: [
-                "PlayToggle", // Play/Pause
-                "VolumePanel", // Gestion du volume
-                "ProgressControl", // Barre de chargement
-                "RemainingTimeDisplay", // Temps restant
-                "PlaybackRateMenuButton", // Vitesse de lecture
-                "subsCapsButton", // Sous-titres
-                "audioTrackButton", //Pistes audio
-                "PictureInPictureToggle", // PictureInPicture
-                "FullscreenToggle" // Plein écran
-            ]
-            {else}
-            children: [
-                "PlayToggle", // Play/Pause
-                "VolumePanel", // Gestion du volume
-                "ProgressControl", // Barre de chargement
-                "RemainingTimeDisplay", // Temps restant
-                "audioTrackButton", //Pistes audio
-            ]
-            {/if}
-        }
+    controlBar: {
+        { if $player_config.subscribed == 1}
+        children: [
+            "PlayToggle", // Play/Pause
+            "VolumePanel", // Gestion du volume
+            "ProgressControl", // Barre de chargement
+            "RemainingTimeDisplay", // Temps restant
+            "PlaybackRateMenuButton", // Vitesse de lecture
+            "subsCapsButton", // Sous-titres
+            "audioTrackButton", //Pistes audio
+            "PictureInPictureToggle", // PictureInPicture
+            "FullscreenToggle" // Plein écran
+        ]
+        {else }
+        children: [
+            "PlayToggle", // Play/Pause
+            "VolumePanel", // Gestion du volume
+            "ProgressControl", // Barre de chargement
+            "RemainingTimeDisplay", // Temps restant
+            "audioTrackButton", //Pistes audio
+        ]
+        {/if }
+    }
     };
 
     //Setting CallBack
-    var cb_vjs_callback = function(){
+    var cb_vjs_callback = function () {
 
         // PLUGIN : Clipbucket - Header
         var header_options = {
-            uploader : video_uploader,
-            videotitle : video_title,
-            videoid : video_id
+            uploader: video_uploader,
+            videotitle: video_title,
+            videoid: video_id
         };
         this.clipbucket_header(header_options);
 
         // PLUGIN : Clipbucket - Controlbar Logo
-        if( "{config('control_bar_logo')}" === 'yes' ){
+        if ("{config('control_bar_logo')}" === 'yes') {
             var controlbar_logo_options = {
-                branding_logo : "{config('control_bar_logo_url')}",
-                product_link : "{config('player_logo_url')}"
+                branding_logo: "{config('control_bar_logo_url')}",
+                product_link: "{config('player_logo_url')}"
             };
             this.clipbucket_controlbar_logo(controlbar_logo_options);
         }
@@ -125,94 +300,91 @@
         this.clipbucket_volume();
 
         // PLUGIN : resolution MP4
-        {if $vdata['file_type'] == 'mp4'}
+        { if $vdata['file_type'] == 'mp4'}
         var res_options = {
-            default : "{CB_video_js::getDefaultVideo($video_files)}"
+            default: "{CB_video_js::getDefaultVideo($video_files)}"
         };
         this.videoJsResolutionSwitcher(res_options);
-        {else}
-            {if $player_config.subscribed == 1}
-                this.hlsQualitySelector({
-                    displayCurrentQuality: false,
-                    vjsIconClass: 'vjs-icon-hd',
-                    defaultQuality: '360'
-                });
-                this.videoJsResolutionSwitcher({
-                    {if $player_config.subscribed == 1}
-                        default : "1080"
-                    {else}
-                        {if $v_quality[0] == '360p'}
-                            default : "360"
-                        {elseif $v_quality[0] == '240p'}
-                            default : "240"
-                        {/if}
-                    {/if}
-                });
-            {else}
-                this.videoJsResolutionSwitcher({
-                    {if $player_config.subscribed == 1}
-                        default : "1080"
-                    {else}
-                        {if $v_quality[0] == '360p'}
-                            default : "360"
-                        {elseif $v_quality[0] == '240p'}
-                            default : "240"
-                        {/if}
-                    {/if}
-                });
-            {/if}
-        {/if}
-
-        {if config('contextual_menu_disabled') === 'yes'}
-        $(".video-js").on("contextmenu",function() {
-            return false;
+        {else }
+        { if $player_config.subscribed == 1}
+        this.hlsQualitySelector({
+            displayCurrentQuality: false,
+            vjsIconClass: 'vjs-icon-hd',
+            defaultQuality: '360'
         });
-        {/if}
+        this.videoJsResolutionSwitcher({
+                    { if $player_config.subscribed == 1 }
+                        default : "1080"
+    {else }
+    { if $v_quality[0] == '360p'}
+                            default : "360"
+    {elseif $v_quality[0] == '240p' }
+                            default : "240"
+    {/if }
+    {/if }
+                });
+    {else }
+    this.videoJsResolutionSwitcher({
+                    { if $player_config.subscribed == 1 }
+                        default : "1080"
+                    { else}
+                        { if $v_quality[0] == '360p' }
+                            default : "360"
+                        { elseif $v_quality[0] == '240p' }
+                            default : "240"
+                        {/if}
+    {/if }
+                });
+    {/if }
+    {/if }
 
-        {if config('player_thumbnails') === 'yes'}
-        this.thumbnails({get_player_thumbs_json($vdata)});
-        {/if}
+    { if config('contextual_menu_disabled') === 'yes'}
+    $(".video-js").on("contextmenu", function () {
+        return false;
+    });
+    {/if }
+
+    { if config('player_thumbnails') === 'yes'}
+    this.thumbnails({ get_player_thumbs_json($vdata) });
+    {/if }
     }
 
     //Initializing
-    $(document).ready(function() {
+    $(document).ready(function () {
         var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
-        {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
-            let video_fov = '{$vdata['fov']}';
-        {literal}
-            cb_player.vr({projection: video_fov});
-        {/literal}
-        {/if}
-        
+        { if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
+        let video_fov = '{$vdata['fov']}';
+        { literal }
+        cb_player.vr({ projection: video_fov });
+        {/literal }
+        {/if }
 
-        {if $vdata['file_type']=='hls'}
-            {if $player_config.subscribed == 0}
-                cb_player.ready(function () {
-                    cb_player.tech(true).vhs.selectPlaylist = function () {
-                    var playlists = cb_player.tech(true).vhs.representations();
-                        playlists.forEach(function(rep) {
-                            if (rep.height !== 360) {
-                            rep.enabled(false);
-                            } else {
-                            rep.enabled(true);
-                            }
-                        });
-                    };
+
+        { if $vdata['file_type'] == 'hls'}
+        { if $player_config.subscribed == 0}
+        cb_player.ready(function () {
+            cb_player.tech(true).vhs.selectPlaylist = function () {
+                var playlists = cb_player.tech(true).vhs.representations();
+                playlists.forEach(function (rep) {
+                    if (rep.height !== 360) {
+                        rep.enabled(false);
+                    } else {
+                        rep.enabled(true);
+                    }
                 });
-            {/if}
-        {/if}
+            };
+        });
+        {/if }
+        {/if }
 
-        $('body').keydown(function(e)
-        {
-            if( $(document.activeElement).is('body') ||
+        $('body').keydown(function (e) {
+            if ($(document.activeElement).is('body') ||
                 $(document.activeElement).is('button.vjs-fullscreen-control') ||
                 $(document.activeElement).is('div.vjs-volume-menu-button') ||
-                $(document.activeElement).is('video') )
-            {
-                if( e.keyCode === 0 || e.keyCode === 32 )
-                {
+                $(document.activeElement).is('video')) {
+                if (e.keyCode === 0 || e.keyCode === 32) {
                     e.preventDefault();
-                    if( cb_player.paused() ){
+                    if (cb_player.paused()) {
                         cb_player.play();
                     } else {
                         cb_player.pause();
@@ -223,4 +395,3 @@
     });
 
 </script>
-
