@@ -252,28 +252,28 @@
             "loop": false,
         {/if}
         "controlBar": {
-            { if $player_config.subscribed == 1}
+        { if $player_config.subscribed == 1}
             "children": [
-            "PlayToggle", // Play/Pause
-            "VolumePanel", // Gestion du volume
-            "ProgressControl", // Barre de chargement
-            "RemainingTimeDisplay", // Temps restant
-            "PlaybackRateMenuButton", // Vitesse de lecture
-            "subsCapsButton", // Sous-titres
-            "audioTrackButton", //Pistes audio
-            "PictureInPictureToggle", // PictureInPicture
-            "FullscreenToggle" // Plein écran
-        ]
+                "PlayToggle", // Play/Pause
+                "VolumePanel", // Gestion du volume
+                "ProgressControl", // Barre de chargement
+                "RemainingTimeDisplay", // Temps restant
+                "PlaybackRateMenuButton", // Vitesse de lecture
+                "subsCapsButton", // Sous-titres
+                "audioTrackButton", //Pistes audio
+                "PictureInPictureToggle", // PictureInPicture
+                "FullscreenToggle" // Plein écran
+            ]
         {else}
-        "children": [
-            "PlayToggle", // Play/Pause
-            "VolumePanel", // Gestion du volume
-            "ProgressControl", // Barre de chargement
-            "RemainingTimeDisplay", // Temps restant
-            "audioTrackButton", //Pistes audio
-        ]
-        {/if }
-    }
+            "children": [
+                "PlayToggle", // Play/Pause
+                "VolumePanel", // Gestion du volume
+                "ProgressControl", // Barre de chargement
+                "RemainingTimeDisplay", // Temps restant
+                "audioTrackButton", //Pistes audio
+            ]
+        {/if}
+        }
     };
 
     //Setting CallBack
