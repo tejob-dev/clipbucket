@@ -423,7 +423,7 @@
             video.currentTime = video.currentTime + speed;
         
             let NotificationValue =  isRewinding ? rewindNotificationValue : forwardNotificationValue ;
-            NotificationValue.innerHTML = `${Math.abs(speed)} seconds`;
+            NotificationValue.innerHTML = Math.abs(speed)+" seconds";
         
             //reset accumulator within 2 seconds of a double click
             timer = setTimeout(function(){
