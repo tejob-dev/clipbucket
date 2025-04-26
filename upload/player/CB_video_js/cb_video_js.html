@@ -64,14 +64,17 @@
         "techOrder" : ['html5'],
         "controls": true,
         "autoplay": autoplay,
-        "muted": autoplay,
+        // "muted": autoplay,
         "preload": "auto",
-        "loop" : false,
         "fluid": true,
         "responsive": true,
-
+        
         {if $player_config.subscribed == 1}
-            playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+            "enableSmoothSeeking": true,
+            "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
+            "loop" : true,
+        {else}
+            "loop" : false,
         {/if}
         controlBar: {
             {if $player_config.subscribed == 1}
