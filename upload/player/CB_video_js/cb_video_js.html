@@ -1,21 +1,21 @@
 <style>
-    body {
-        background: black;
-    }
+	body {
+		background: black;
+	}
 
-    .vjs-fluid:not(.vjs-audio-only-mode) {
-        padding-top: 50% !important;
-        position: relative;
-        background-color: black;
-        height: 100vh !important;
-    }
+	.vjs-fluid:not(.vjs-audio-only-mode) {
+		padding-top: 50% !important;
+		position:relative;
+		background-color: black;
+		height: 100vh !important;
+	}
 
-    .video-js .vjs-control-bar {
-        background-color: transparent;
-        /* border-top: 1px solid white; */
-        height: 3em;
-        margin-bottom: 1em;
-    }
+	.video-js .vjs-control-bar {
+		background-color: transparent;
+		/* border-top: 1px solid white; */
+		height: 3em;
+		margin-bottom: 1em;
+	}
 
     html {
         box-sizing: border-box;
@@ -183,39 +183,37 @@
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
     var video_id = "{$vdata.videoid}";
-    var autoplay = {if $player_config.subscribed == 1 } 'yes' == 'yes' {else} 'no' == 'yes' {/if}
+    var autoplay = {if $player_config.subscribed==1} 'yes' == 'yes' {else} 'no' == 'yes' {/if};
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
     var subscribed = "{$player_config.subscribed}";
 </script>
 
-<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause"
-    height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
     {$videofile = ""}
     {foreach $video_files as $file}
-    {if strpos($file, 'no_video.mp4') !== false}
-    <source src='{$file}' type="video/mp4" />
-    {else}
-    {if $vdata['file_type']=='hls'}
-    <source src='{$file}' type="application/x-mpegURL" />
-    {else}
-    {$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
-    <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}" />
-    {/if}
-    {/if}
+        {if strpos($file, 'no_video.mp4') !== false}
+            <source src='{$file}' type="video/mp4"/>
+        {else}
+            {if $vdata['file_type']=='hls'}
+                <source src='{$file}' type="application/x-mpegURL"/>
+            {else}
+				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
+                <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
+            {/if}
+        {/if}
     {/foreach}
     {if $player_config.subscribed == 1}
-    {if config('player_subtitles')}
-    {$subtitles = get_video_subtitles($vdata)}
-    {if $subtitles}
-    {foreach $subtitles as $file}
-    <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
-    {/foreach}
+        {if config('player_subtitles')}
+            {$subtitles = get_video_subtitles($vdata)}
+            {if $subtitles}
+                {foreach $subtitles as $file}
+                    <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+                {/foreach}
+            {/if}
+        {/if}
     {/if}
-    {/if}
-    {/if}
-    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a
-            href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
 <div class="video-rewind-notify rewind notification">
     <div class="rewind-icon icon">
@@ -235,7 +233,7 @@
 <script type="text/javascript">
     //player settings
     var cb_player_setup = {
-        plugins: {},
+        plugins : { },
         "techOrder": ['html5'],
         "controls": true,
         "autoplay": autoplay,
@@ -243,12 +241,13 @@
         "preload": "auto",
         "fluid": true,
         "responsive": true,
-        
+
         {if $player_config.subscribed == 1}
-            "enableSmoothSeeking": true,
-            "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
-            "loop": true,
-            "controlBar": {
+            playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        {/if}
+        controlBar: {
+            {if $player_config.subscribed == 1}
+            
                 "children": [
                     "PlayToggle", // Play/Pause
                     "VolumePanel", // Gestion du volume
@@ -260,37 +259,35 @@
                     "PictureInPictureToggle", // PictureInPicture
                     "FullscreenToggle" // Plein écran
                 ]
-            }
-        {else}
-            "loop": false,
-            "controlBar": {
-                "children": [
+            
+            {else}
+            "children": [
                     "PlayToggle", // Play/Pause
                     "VolumePanel", // Gestion du volume
                     "ProgressControl", // Barre de chargement
                     "RemainingTimeDisplay", // Temps restant
                     "audioTrackButton", //Pistes audio
                 ]
-            }
-        {/if}
+            {/if}
+        }
     };
 
     //Setting CallBack
-    var cb_vjs_callback = function () {
+    var cb_vjs_callback = function(){
 
         // PLUGIN : Clipbucket - Header
         var header_options = {
-            uploader: video_uploader,
-            videotitle: video_title,
-            videoid: video_id
+            uploader : video_uploader,
+            videotitle : video_title,
+            videoid : video_id
         };
         this.clipbucket_header(header_options);
 
         // PLUGIN : Clipbucket - Controlbar Logo
-        if ("{config('control_bar_logo')}" === 'yes') {
+        if( "{config('control_bar_logo')}" === 'yes' ){
             var controlbar_logo_options = {
-                branding_logo: "{config('control_bar_logo_url')}",
-                product_link: "{config('player_logo_url')}"
+                branding_logo : "{config('control_bar_logo_url')}",
+                product_link : "{config('player_logo_url')}"
             };
             this.clipbucket_controlbar_logo(controlbar_logo_options);
         }
@@ -299,91 +296,94 @@
         this.clipbucket_volume();
 
         // PLUGIN : resolution MP4
-        { if $vdata['file_type'] == 'mp4'}
+        {if $vdata['file_type'] == 'mp4'}
         var res_options = {
-            default: "{CB_video_js::getDefaultVideo($video_files)}"
+            default : "{CB_video_js::getDefaultVideo($video_files)}"
         };
         this.videoJsResolutionSwitcher(res_options);
-        {else }
-        { if $player_config.subscribed == 1}
-        this.hlsQualitySelector({
-            displayCurrentQuality: false,
-            vjsIconClass: 'vjs-icon-hd',
-            defaultQuality: '360'
-        });
-        this.videoJsResolutionSwitcher({
-                    { if $player_config.subscribed == 1 }
-                        default : "1080"
-    {else }
-    { if $v_quality[0] == '360p'}
-                            default : "360"
-    {elseif $v_quality[0] == '240p' }
-                            default : "240"
-    {/if }
-    {/if }
+        {else}
+            {if $player_config.subscribed == 1}
+                this.hlsQualitySelector({
+                    displayCurrentQuality: false,
+                    vjsIconClass: 'vjs-icon-hd',
+                    defaultQuality: '360'
                 });
-    {else }
-    this.videoJsResolutionSwitcher({
-                    { if $player_config.subscribed == 1 }
+                this.videoJsResolutionSwitcher({
+                    {if $player_config.subscribed == 1}
                         default : "1080"
-                    { else}
-                        { if $v_quality[0] == '360p' }
+                    {else}
+                        {if $v_quality[0] == '360p'}
                             default : "360"
-                        { elseif $v_quality[0] == '240p' }
+                        {elseif $v_quality[0] == '240p'}
                             default : "240"
                         {/if}
-    {/if }
+                    {/if}
                 });
-    {/if }
-    {/if }
+            {else}
+                this.videoJsResolutionSwitcher({
+                    {if $player_config.subscribed == 1}
+                        default : "1080"
+                    {else}
+                        {if $v_quality[0] == '360p'}
+                            default : "360"
+                        {elseif $v_quality[0] == '240p'}
+                            default : "240"
+                        {/if}
+                    {/if}
+                });
+            {/if}
+        {/if}
 
-    { if config('contextual_menu_disabled') === 'yes'}
-    $(".video-js").on("contextmenu", function () {
-        return false;
-    });
-    {/if }
+        {if config('contextual_menu_disabled') === 'yes'}
+        $(".video-js").on("contextmenu",function() {
+            return false;
+        });
+        {/if}
 
-    { if config('player_thumbnails') === 'yes'}
-    this.thumbnails({ get_player_thumbs_json($vdata) });
-    {/if }
+        {if config('player_thumbnails') === 'yes'}
+        this.thumbnails({get_player_thumbs_json($vdata)});
+        {/if}
     }
 
     //Initializing
-    $(document).ready(function () {
+    $(document).ready(function() {
         var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
-        { if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
-        let video_fov = '{$vdata['fov']}';
-        { literal }
-        cb_player.vr({ projection: video_fov });
-        {/literal }
-        {/if }
+        {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
+            let video_fov = '{$vdata['fov']}';
+        {literal}
+            cb_player.vr({projection: video_fov});
+        {/literal}
+        {/if}
+        
 
-
-        { if $vdata['file_type'] == 'hls'}
-        { if $player_config.subscribed == 0}
-        cb_player.ready(function () {
-            cb_player.tech(true).vhs.selectPlaylist = function () {
-                var playlists = cb_player.tech(true).vhs.representations();
-                playlists.forEach(function (rep) {
-                    if (rep.height !== 360) {
-                        rep.enabled(false);
-                    } else {
-                        rep.enabled(true);
-                    }
+        {if $vdata['file_type']=='hls'}
+            {if $player_config.subscribed == 0}
+                cb_player.ready(function () {
+                    cb_player.tech(true).vhs.selectPlaylist = function () {
+                    var playlists = cb_player.tech(true).vhs.representations();
+                        playlists.forEach(function(rep) {
+                            if (rep.height !== 360) {
+                            rep.enabled(false);
+                            } else {
+                            rep.enabled(true);
+                            }
+                        });
+                    };
                 });
-            };
-        });
-        {/if }
-        {/if }
+            {/if}
+        {/if}
 
-        $('body').keydown(function (e) {
-            if ($(document.activeElement).is('body') ||
+        $('body').keydown(function(e)
+        {
+            if( $(document.activeElement).is('body') ||
                 $(document.activeElement).is('button.vjs-fullscreen-control') ||
                 $(document.activeElement).is('div.vjs-volume-menu-button') ||
-                $(document.activeElement).is('video')) {
-                if (e.keyCode === 0 || e.keyCode === 32) {
+                $(document.activeElement).is('video') )
+            {
+                if( e.keyCode === 0 || e.keyCode === 32 )
+                {
                     e.preventDefault();
-                    if (cb_player.paused()) {
+                    if( cb_player.paused() ){
                         cb_player.play();
                     } else {
                         cb_player.pause();
@@ -394,3 +394,4 @@
     });
 
 </script>
+
