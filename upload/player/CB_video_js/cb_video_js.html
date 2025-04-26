@@ -248,32 +248,31 @@
             "enableSmoothSeeking": true,
             "playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2],
             "loop": true,
+            "controlBar": {
+                "children": [
+                    "PlayToggle", // Play/Pause
+                    "VolumePanel", // Gestion du volume
+                    "ProgressControl", // Barre de chargement
+                    "RemainingTimeDisplay", // Temps restant
+                    "PlaybackRateMenuButton", // Vitesse de lecture
+                    "subsCapsButton", // Sous-titres
+                    "audioTrackButton", //Pistes audio
+                    "PictureInPictureToggle", // PictureInPicture
+                    "FullscreenToggle" // Plein écran
+                ]
+            }
         {else}
             "loop": false,
+            "controlBar": {
+                "children": [
+                    "PlayToggle", // Play/Pause
+                    "VolumePanel", // Gestion du volume
+                    "ProgressControl", // Barre de chargement
+                    "RemainingTimeDisplay", // Temps restant
+                    "audioTrackButton", //Pistes audio
+                ]
+            }
         {/if}
-        "controlBar": {
-        { if $player_config.subscribed == 1}
-            "children": [
-                "PlayToggle", // Play/Pause
-                "VolumePanel", // Gestion du volume
-                "ProgressControl", // Barre de chargement
-                "RemainingTimeDisplay", // Temps restant
-                "PlaybackRateMenuButton", // Vitesse de lecture
-                "subsCapsButton", // Sous-titres
-                "audioTrackButton", //Pistes audio
-                "PictureInPictureToggle", // PictureInPicture
-                "FullscreenToggle" // Plein écran
-            ]
-        {else}
-            "children": [
-                "PlayToggle", // Play/Pause
-                "VolumePanel", // Gestion du volume
-                "ProgressControl", // Barre de chargement
-                "RemainingTimeDisplay", // Temps restant
-                "audioTrackButton", //Pistes audio
-            ]
-        {/if}
-        }
     };
 
     //Setting CallBack
