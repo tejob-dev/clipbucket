@@ -26,12 +26,15 @@ class CB_video_js
             ,$player_name.'/plugin/playinline/iphone-inline-video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/hls-quality-selector/videojs-hls-quality-selector'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/plugin/resume/store.min.js' => 'player'
+            ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.js' => 'player'
         ]);
 
         ClipBucket::getInstance()->addAllCSS([
             $player_name.'/css/video-js'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
+            ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.css' => 'player'
         ]);
 
         if( config('chromecast') == 'yes' ){

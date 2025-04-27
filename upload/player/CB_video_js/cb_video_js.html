@@ -359,6 +359,14 @@
             cb_player.vr({projection: video_fov});
         {/literal}
         {/if}
+
+        cb_player.Resume({
+            uuid: video_id+"_resume",
+            playbackOffset: 5, // begin playing video this number of seconds before it otherwise would.
+            title: video_title,
+            resumeButtonText: 'Reprendre',
+            cancelButtonText: 'Démarrer'
+        });
         
 
         {if $vdata['file_type']=='hls'}
