@@ -169,8 +169,14 @@ var ResumeModal = (function (_ModalDialog) {
 
 _videoJs2['default'].registerComponent('ResumeButton', ResumeButton);
 _videoJs2['default'].registerComponent('ResumeCancelButton', ResumeCancelButton);
-_videoJs2['default'].registerComponent('ModalButtons', ModalButtons);
-_videoJs2['default'].registerComponent('ResumeModal', ResumeModal);
+_videoJs2['default'].registerComponent('ModalButtons', function (options) {
+  var player = this;
+  player.modalButtons = new ModalButtons(player, options);
+});
+_videoJs2['default'].registerComponent('ResumeModal', function (options) {
+  var player = this;
+  player.modalButtons = new ResumeModal(player, options);
+});
 
 var Resume = function Resume(options) {
   var msg = undefined;
