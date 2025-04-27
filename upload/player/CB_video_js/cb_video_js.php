@@ -36,6 +36,7 @@ class CB_video_js
             $player_name.'/css/video-js'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
+            ,$player_name.'/css/nuevo-style.css' => 'player'
             ,$player_name.'/css/jwlike/videojs.css' => 'player'
             // ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.css' => 'player'
         ]);
