@@ -30,7 +30,7 @@ var ResumeButton = (function (_Button) {
   function ResumeButton(player, options) {
     _classCallCheck(this, ResumeButton);
 
-    _get(Object.getPrototypeOf(ResumeButton.prototype), 'constructor', this).call(this, player, options);
+    new _get(Object.getPrototypeOf(ResumeButton.prototype), 'constructor', this).call(this, player, options);
     this.resumeFromTime = options.resumeFromTime;
     this.player = player;
   }
@@ -115,7 +115,7 @@ var ModalButtons = (function (_Component) {
   function ModalButtons(player, options) {
     _classCallCheck(this, ModalButtons);
 
-    _get(Object.getPrototypeOf(ModalButtons.prototype), 'constructor', this).call(this, player, options);
+    new _get(Object.getPrototypeOf(ModalButtons.prototype), 'constructor', this)(player, options);
     this.addChild('ResumeButton', {
       buttonText: options.resumeButtonText,
       resumeFromTime: options.resumeFromTime
@@ -145,7 +145,7 @@ var ResumeModal = (function (_ModalDialog) {
   function ResumeModal(player, options) {
     _classCallCheck(this, ResumeModal);
 
-    _get(Object.getPrototypeOf(ResumeModal.prototype), 'constructor', this).call(this, player, options);
+    new _get(Object.getPrototypeOf(ResumeModal.prototype), 'constructor', this)(player, options);
     this.player_.resumeModal = this;
     this.open();
     this.addChild('ModalButtons', {
