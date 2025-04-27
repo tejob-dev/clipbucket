@@ -20,14 +20,16 @@ class CB_video_js
 
         $min_suffixe = in_dev() ? '' : '.min';
         ClipBucket::getInstance()->addAllJS([
-            $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
+            $player_name.'/js/license.js' => 'player'
+            ,$player_name.'/js/video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/playinline/iphone-inline-video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/hls-quality-selector/videojs-hls-quality-selector'.$min_suffixe.'.js' => 'player'
-            ,$player_name.'/plugin/resume/store.min.js' => 'player'
-            ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.js' => 'player'
+            ,$player_name.'/js/nuevo'.$min_suffixe.'.js' => 'player'
+            // ,$player_name.'/plugin/resume/store.min.js' => 'player'
+            // ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.js' => 'player'
         ]);
 
         ClipBucket::getInstance()->addAllCSS([

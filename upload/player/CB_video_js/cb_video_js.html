@@ -232,6 +232,7 @@
     //player settings
     var cb_player_setup = {
         plugins : { },
+        license:licenseKey,
         "techOrder": ['html5'],
         "controls": true,
         "autoplay": autoplay,
@@ -360,8 +361,9 @@
         {/literal}
         {/if}
 
-        cb_player.Resume({
-            uuid: "{$vdata.videoid}_resume",
+        cb_player.nuevo({
+            video_id: "{$vdata.videoid}_resume",
+            resume: true
             // playbackOffset: 5, // begin playing video this number of seconds before it otherwise would.
             // title: video_title,
             // resumeButtonText: 'Reprendre',
