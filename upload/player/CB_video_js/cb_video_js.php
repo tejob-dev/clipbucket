@@ -36,9 +36,16 @@ class CB_video_js
             $player_name.'/css/video-js'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
-            ,$player_name.'/css/nuevo-style.css' => 'player'
+            
             // ,$player_name.'/plugin/resume/videojs-resume'.$min_suffixe.'.css' => 'player'
         ]);
+
+        $current_url = $_SERVER['REQUEST_URI'];
+        if(strpos($current_url, 'embed_player') !== false){
+            ClipBucket::getInstance()->addJS([
+                $player_name.'/css/nuevo-style.css' => 'player'
+            ]);
+        }
 
         if( config('chromecast') == 'yes' ){
             ClipBucket::getInstance()->addAllJS([
