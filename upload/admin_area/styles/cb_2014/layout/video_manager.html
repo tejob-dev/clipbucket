@@ -56,4 +56,33 @@
 <script>
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
 
+    function getVideoLinks() {
+        var titles = document.getElementsByClassName('copyurlevid');
+        var links = document.getElementsByClassName('copytitlevid');
+        var result = '';
+        
+        for(var i = 0; i < titles.length; i++) {
+            result += titles[i].value + ' | ' + links[i].href + '\n';
+        }
+        
+        return result;
+    }
+
+    // Function to copy to clipboard
+    function copyToClipboard(text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+
+    // Add click handler to copy button
+    document.querySelector('input[name="copy_url_selected"]').addEventListener('click', function(e) {
+        e.preventDefault();
+        var links = getVideoLinks();
+        copyToClipboard(links);
+        alert('Links copied to clipboard!');
+    });
 </script>
