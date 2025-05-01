@@ -41,7 +41,7 @@ class CB_video_js
         ]);
 
         $current_url = $_SERVER['REQUEST_URI'];
-        if(strpos($current_url, 'embed_player') !== false){
+        if(preg_match('/embed_player/i', $current_url)){
             ClipBucket::getInstance()->addJS([
                 $player_name.'/css/nuevo-style.css' => 'player'
             ]);
