@@ -1,6 +1,8 @@
 <tr data-id="{$video.videoid}">
     <td>
         <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
+        <a class="copytitlevid" style="display: none;" href="/player/embed_player.php?vid={$video.videokey}"></a>
+        <input type="hidden" class="hidden copyurlevid" value="{display_clean($video.title)}">
     </td>
     <td>
         <div class="row">
