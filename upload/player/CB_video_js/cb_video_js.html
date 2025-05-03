@@ -475,7 +475,7 @@
             clearTimeout(timer);
         
             let speed = (isRewinding ? rewindSpeed : forwardSpeed);
-            video.currentTime = video.currentTime + speed;
+            cb_player.currentTime(cb_player.currentTime() + speed);
         
             let NotificationValue =  isRewinding ? rewindNotificationValue : forwardNotificationValue ;
             NotificationValue.innerHTML = Math.abs(speed)+" seconds";
