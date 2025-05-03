@@ -290,11 +290,11 @@
         let formattedTitle = title.replace(/[._]/g, ' ');
         
         // Split by spaces and find the year index
-        const parts = formattedTitle.split(' ');
-        const yearIndex = parts.indexOf(year);
+        const parts = formattedTitle.split(year);
+        // const yearIndex = parts.indexOf(year);
         
         // Return everything before the year
-        return parts.slice(0, yearIndex).join(' ')+' '+year;
+        return parts[0]+' '+year;
     }
 
     //Setting CallBack
@@ -520,10 +520,11 @@
 
         //Event Listeners
         $(video).on('click', togglePlay);
-        $(video).on('dblclick', doubleClickHandler);
+        console.log("video dblclick: "+video.id);
+        $(video).off('dblclick').on('dblclick', doubleClickHandler);
         // video.addEventListener('dblclick', doubleClickHandler);
         notifications.forEach(function(notification){
-        notification.addEventListener('animationend', animateNotificationOut);
+            notification.addEventListener('animationend', animateNotificationOut);
         });
     });
 
