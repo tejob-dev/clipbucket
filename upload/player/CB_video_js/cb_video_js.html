@@ -521,7 +521,31 @@
         //Event Listeners
         $(video).on('click', togglePlay);
         console.log("video dblclick: "+video.id);
-        $(video).off('dblclick').on('dblclick', doubleClickHandler);
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            $(video).on('dblclick', doubleClickHandler);
+        }else{
+            // Variables to track taps
+            let lastTapTime = 0;
+            const doubleTapDelay = 300; // milliseconds threshold for double tap
+
+            // Add touch event handler
+            video.addEventListener('touchend', function(event) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTapTime;
+                // Prevent default behavior to avoid zooming or other browser actions
+                event.preventDefault();
+                if (tapLength < doubleTapDelay && tapLength > 0) {
+                    // Double tap detected - perform your action here
+                    doubleClickHandler(event);
+                    console.log('Double tap detected!');
+                    // Reset the tap timer
+                    lastTapTime = 0;
+                } else {
+                    // This is a single tap - just update the last tap time
+                    lastTapTime = currentTime;
+                }
+            }, false);
+        }
         // video.addEventListener('dblclick', doubleClickHandler);
         notifications.forEach(function(notification){
             notification.addEventListener('animationend', animateNotificationOut);
