@@ -524,6 +524,7 @@
         if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             $(video).on('dblclick', doubleClickHandler);
         }else{
+            console.log("video touch: "+video.id);
             // Variables to track taps
             let lastTapTime = 0;
             const doubleTapDelay = 300; // milliseconds threshold for double tap
