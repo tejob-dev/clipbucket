@@ -305,7 +305,7 @@
         // PLUGIN : Clipbucket - Header
         var header_options = {
             uploader : video_uploader,
-            videotitle : formatVideoTitle(video_title),
+            videotitle : formatVideoTitle("{display_clean($vdata.title)}"),
             videoid : video_id
         };
         this.clipbucket_header(header_options);
@@ -402,11 +402,9 @@
                         var playlists = cb_player.tech(true).vhs.representations();
                         if(firstVideoSwitcher == false){
                             playlists.forEach(function(rep) {
-                                if (rep.height == 360) {
+                                if (rep.height != 1080) {
                                     rep.enabled(true);
-                                }else if (rep.height == 240) {
-                                    rep.enabled(true);
-                                } else {
+                                }else {
                                     rep.enabled(false);
                                 }
                             });
@@ -422,7 +420,7 @@
                         if(firstVideoSwitcher == false){
                             playlists.forEach(function(rep) {
                                 console.log("Resolution: "+rep.height+"x"+rep.width);
-                                if (rep.height == 1080) {
+                                if (rep.height !== 240 && rep.height !== 360) {
                                     rep.enabled(true);
                                 } else {
                                     rep.enabled(false);
