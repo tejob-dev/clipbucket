@@ -539,6 +539,56 @@
                     cb_player.play();
                 }
             });
+
+            cb_player.ready(function() {
+                // Access the player DOM element
+                var videoEl = cb_player.el();
+
+                // Add double-click event listener
+                videoEl.addEventListener('dblclick', function() {
+                    console.log("dblclick 2");
+                    // Example action: toggle fullscreen
+                    doubleClickHandler(event);
+                    if (cb_player.paused()) {
+                        cb_player.play();
+                    }
+                });
+
+
+                var videoEl = cb_player.el();
+                var lastTap = 0;
+
+                videoEl.addEventListener('touchend', function(e) {
+                    console.log("touch end");
+                    var currentTime = new Date().getTime();
+                    var tapLength = currentTime - lastTap;
+
+                    if (tapLength < 300 && tapLength > 0) {
+                    // Double-tap detected
+                    if (player.isFullscreen()) {
+                        player.exitFullscreen();
+                    } else {
+                        player.requestFullscreen();
+                    }
+                    e.preventDefault();
+                    }
+
+                    lastTap = currentTime;
+                });
+
+                var videoArea = cb_player.el().getElementsByClassName('vjs-tech')[0];
+
+                videoArea.addEventListener('dblclick', function() {
+                    console.log("dblclick 3");
+                    // Your custom action
+                    doubleClickHandler(event);
+                    if (cb_player.paused()) {
+                        cb_player.play();
+                    }
+                });
+            });
+
+
         }
         // video.addEventListener('dblclick', doubleClickHandler);
         notifications.forEach(function(notification){
