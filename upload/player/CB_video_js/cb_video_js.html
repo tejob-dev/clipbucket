@@ -401,10 +401,6 @@
                                 rep.enabled(true);
                             }else if (rep.height == 240) {
                                 rep.enabled(true);
-                            } else if (rep.width == 360) {
-                                rep.enabled(true);
-                            }else if (rep.width == 240) {
-                                rep.enabled(true);
                             } else {
                                 rep.enabled(false);
                             }
@@ -419,8 +415,6 @@
                         playlists.forEach(function(rep) {
                             console.log("Resolution: "+rep.height+"x"+rep.width);
                             if (rep.height == 1080) {
-                                rep.enabled(true);
-                            } else if (rep.width == 1080) {
                                 rep.enabled(true);
                             } else {
                                 rep.enabled(false);
