@@ -544,6 +544,8 @@
         notifications.forEach(function(notification){
             notification.addEventListener('animationend', animateNotificationOut);
         });
+
+        $(".vidTitle > a").text(formatVideoTitle("{display_clean($vdata.title)}"));
     });
 
 </script>
