@@ -280,7 +280,7 @@
 
     function formatVideoTitle(title) {
         // Find year pattern (4 digits)
-        const yearMatch = title.match(/\d{4}/);
+        const yearMatch = title.match(/(?:19|20)\d{2}/);
         if (!yearMatch) return title;
 
         // Get the year
@@ -386,6 +386,7 @@
             video_id: "{$vdata.videoid}_resume",
             resume: true,
             qualityMenu: false,
+            muted: false,
             // playbackOffset: 5, // begin playing video this number of seconds before it otherwise would.
             // title: video_title,
             // resumeButtonText: 'Reprendre',
@@ -393,35 +394,42 @@
         });
         
 
+        let firstVideoSwitcher = false;
         {if $vdata['file_type']=='hls'}
             {if $player_config.subscribed == 0}
                 cb_player.ready(function () {
                     cb_player.tech(true).vhs.selectPlaylist = function () {
-                    var playlists = cb_player.tech(true).vhs.representations();
-                        playlists.forEach(function(rep) {
-                            if (rep.height == 360) {
-                                rep.enabled(true);
-                            }else if (rep.height == 240) {
-                                rep.enabled(true);
-                            } else {
-                                rep.enabled(false);
-                            }
-                        });
+                        var playlists = cb_player.tech(true).vhs.representations();
+                        if(firstVideoSwitcher == false){
+                            playlists.forEach(function(rep) {
+                                if (rep.height == 360) {
+                                    rep.enabled(true);
+                                }else if (rep.height == 240) {
+                                    rep.enabled(true);
+                                } else {
+                                    rep.enabled(false);
+                                }
+                            });
+                            firstVideoSwitcher = true;
+                        }
                     };
                 });
 
             {else}
                 cb_player.ready(function () {
                     cb_player.tech(true).vhs.selectPlaylist = function () {
-                    var playlists = cb_player.tech(true).vhs.representations();
-                        playlists.forEach(function(rep) {
-                            console.log("Resolution: "+rep.height+"x"+rep.width);
-                            if (rep.height == 1080) {
-                                rep.enabled(true);
-                            } else {
-                                rep.enabled(false);
-                            }
-                        });
+                        var playlists = cb_player.tech(true).vhs.representations();
+                        if(firstVideoSwitcher == false){
+                            playlists.forEach(function(rep) {
+                                console.log("Resolution: "+rep.height+"x"+rep.width);
+                                if (rep.height == 1080) {
+                                    rep.enabled(true);
+                                } else {
+                                    rep.enabled(false);
+                                }
+                            });
+                            firstVideoSwitcher = true;
+                        }
                     };
                 });
             {/if}
