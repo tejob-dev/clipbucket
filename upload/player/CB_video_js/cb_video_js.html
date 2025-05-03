@@ -532,6 +532,9 @@
                 // Your double-click action here
                 // For example: toggle fullscreen
                 doubleClickHandler(event);
+                if (cb_player.paused()) {
+                    cb_player.play();
+                }
             });
         }
         // video.addEventListener('dblclick', doubleClickHandler);
