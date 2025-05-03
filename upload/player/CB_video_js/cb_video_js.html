@@ -278,13 +278,32 @@
         }
     };
 
+    function formatVideoTitle(title) {
+        // Find year pattern (4 digits)
+        const yearMatch = title.match(/\d{4}/);
+        if (!yearMatch) return title;
+
+        // Get the year
+        const year = yearMatch[0];
+        
+        // Replace dots and underscores with spaces
+        let formattedTitle = title.replace(/[._]/g, ' ');
+        
+        // Split by spaces and find the year index
+        const parts = formattedTitle.split(' ');
+        const yearIndex = parts.indexOf(year);
+        
+        // Return everything before the year
+        return parts.slice(0, yearIndex).join(' ')+' '+year;
+    }
+
     //Setting CallBack
     var cb_vjs_callback = function(){
 
         // PLUGIN : Clipbucket - Header
         var header_options = {
             uploader : video_uploader,
-            videotitle : video_title,
+            videotitle : formatVideoTitle(video_title),
             videoid : video_id
         };
         this.clipbucket_header(header_options);
@@ -378,10 +397,32 @@
                     cb_player.tech(true).vhs.selectPlaylist = function () {
                     var playlists = cb_player.tech(true).vhs.representations();
                         playlists.forEach(function(rep) {
-                            if (rep.height !== 360) {
-                            rep.enabled(false);
+                            if (rep.height == 360) {
+                                rep.enabled(true);
+                            }else if (rep.height == 240) {
+                                rep.enabled(true);
+                            } else if (rep.width == 360) {
+                                rep.enabled(true);
+                            }else if (rep.width == 240) {
+                                rep.enabled(true);
                             } else {
-                            rep.enabled(true);
+                                rep.enabled(false);
+                            }
+                        });
+                    };
+                });
+
+            {else}
+                cb_player.ready(function () {
+                    cb_player.tech(true).vhs.selectPlaylist = function () {
+                    var playlists = cb_player.tech(true).vhs.representations();
+                        playlists.forEach(function(rep) {
+                            if (rep.height == 1080) {
+                                rep.enabled(true);
+                            } else if (rep.width == 1080) {
+                                rep.enabled(true);
+                            } else {
+                                rep.enabled(false);
                             }
                         });
                     };
@@ -478,8 +519,9 @@
         }
 
         //Event Listeners
-        video.addEventListener('click', togglePlay);
-        video.addEventListener('dblclick', doubleClickHandler);
+        $(video).on('click', togglePlay);
+        $(video).on('dblclick', doubleClickHandler);
+        // video.addEventListener('dblclick', doubleClickHandler);
         notifications.forEach(function(notification){
         notification.addEventListener('animationend', animateNotificationOut);
         });
