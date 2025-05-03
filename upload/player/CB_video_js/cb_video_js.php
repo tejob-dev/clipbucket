@@ -73,7 +73,7 @@ class CB_video_js
         register_actions_play_video('load_player', self::class);
     }
 
-    private function formatVideoTitle($title) {
+    private static function formatVideoTitle($title) {
         // Find year pattern (4 digits)
         if (!preg_match('/(?:19|20)\d{2}/', $title, $yearMatch)) {
             return $title;
