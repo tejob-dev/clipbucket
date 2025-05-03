@@ -545,7 +545,7 @@
                 var videoEl = cb_player.el();
 
                 // Add double-click event listener
-                videoEl.addEventListener('dblclick', function() {
+                videoEl.addEventListener('dblclick', function(event) {
                     console.log("dblclick 2");
                     // Example action: toggle fullscreen
                     doubleClickHandler(event);
@@ -558,19 +558,17 @@
                 var videoEl = cb_player.el();
                 var lastTap = 0;
 
-                videoEl.addEventListener('touchend', function(e) {
+                videoEl.addEventListener('touchend', function(event) {
                     console.log("touch end");
                     var currentTime = new Date().getTime();
                     var tapLength = currentTime - lastTap;
 
                     if (tapLength < 300 && tapLength > 0) {
-                    // Double-tap detected
-                    if (player.isFullscreen()) {
-                        player.exitFullscreen();
-                    } else {
-                        player.requestFullscreen();
-                    }
-                    e.preventDefault();
+                        console.log("tap length: "+tapLength);
+                        doubleClickHandler(event);
+                        if (cb_player.paused()) {
+                            cb_player.play();
+                        }
                     }
 
                     lastTap = currentTime;
@@ -578,7 +576,7 @@
 
                 var videoArea = cb_player.el().getElementsByClassName('vjs-tech')[0];
 
-                videoArea.addEventListener('dblclick', function() {
+                videoArea.addEventListener('dblclick', function(event) {
                     console.log("dblclick 3");
                     // Your custom action
                     doubleClickHandler(event);
