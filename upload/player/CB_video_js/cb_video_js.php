@@ -73,6 +73,25 @@ class CB_video_js
         register_actions_play_video('load_player', self::class);
     }
 
+    private function formatVideoTitle($title) {
+        // Find year pattern (4 digits)
+        if (!preg_match('/(?:19|20)\d{2}/', $title, $yearMatch)) {
+            return $title;
+        }
+
+        // Get the year
+        $year = $yearMatch[0];
+        
+        // Replace dots and underscores with spaces
+        $formattedTitle = str_replace(['.', '_'], ' ', $title);
+        
+        // Split by spaces and find the year index
+        $parts = explode($year, $formattedTitle);
+        
+        // Return everything before the year plus the year
+        return trim($parts[0]) . ' ' . $year;
+    }
+
     /**
      * @throws Exception
      */
@@ -98,6 +117,7 @@ class CB_video_js
                 $vaudio = array_merge($vaudio, $matches[1]);
             }
         }
+        $vdetails['title'] = self::formatVideoTitle($vdetails['title']);
         // var_dump($vaudio);
         // exit();
         assign('video_files', $video_play);
