@@ -417,6 +417,7 @@
                     cb_player.tech(true).vhs.selectPlaylist = function () {
                     var playlists = cb_player.tech(true).vhs.representations();
                         playlists.forEach(function(rep) {
+                            console.log("Resolution: "+rep.height+"x"+rep.width);
                             if (rep.height == 1080) {
                                 rep.enabled(true);
                             } else if (rep.width == 1080) {
