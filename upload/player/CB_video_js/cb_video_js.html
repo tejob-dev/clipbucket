@@ -419,7 +419,7 @@
                         var playlists = cb_player.tech(true).vhs.representations();
                         if(firstVideoSwitcher == false){
                             playlists.forEach(function(rep) {
-                                console.log("Resolution: "+rep.height+"x"+rep.width);
+                                console.log("Resolution: "+rep.height+"x"+rep.width, rep.height != 240 && rep.height != 360, rep.enabled());
                                 if (rep.height !== 240 && rep.height !== 360) {
                                     rep.enabled(true);
                                 } else {
