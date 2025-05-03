@@ -526,31 +526,12 @@
         }else{
             console.log("video touch: "+video.id);
             // Variables to track taps
-            let lastTapTime = 0;
-            let onloadmet = false;
-            const doubleTapDelay = 300; // milliseconds threshold for double tap
-
-            // Add touch event handler
-            video.addEventListener('loadedmetadata', function() {
-                if(onloadmet == false){
-                    $(video).get(0).addEventListener('touchend', function(event) {
-                        const currentTime = new Date().getTime();
-                        const tapLength = currentTime - lastTapTime;
-                        // Prevent default behavior to avoid zooming or other browser actions
-                        event.preventDefault();
-                        if (tapLength < doubleTapDelay && tapLength > 0) {
-                            // Double tap detected - perform your action here
-                            doubleClickHandler(event);
-                            console.log('Double tap detected!');
-                            // Reset the tap timer
-                            lastTapTime = 0;
-                        } else {
-                            // This is a single tap - just update the last tap time
-                            lastTapTime = currentTime;
-                        }
-                    }, false);
-                    onloadmet = true;
-                }
+            // Add double-click event handler for desktop
+            cb_player.on('dblclick', function(event) {
+                console.log('Double-click detected on desktop');
+                // Your double-click action here
+                // For example: toggle fullscreen
+                doubleClickHandler(event);
             });
         }
         // video.addEventListener('dblclick', doubleClickHandler);
