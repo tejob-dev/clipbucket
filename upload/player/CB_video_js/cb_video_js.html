@@ -564,7 +564,7 @@
 
                     if (tapLength < 300 && tapLength > 0) {
                         console.log("tap length: "+tapLength);
-                        doubleClickHandler(event);
+                        doubleClickHandler(event, cb_player.el());
                         if (cb_player.paused()) {
                             cb_player.play();
                         }
