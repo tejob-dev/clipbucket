@@ -511,9 +511,10 @@
         }
 
         //Event Handlers
-        function doubleClickHandler(e){
+        function doubleClickHandler(e, playerEl){
             console.log("current time: "+video.currentTime);
-            const videoWidth = video.offsetWidth;
+            const videoWidth = playerEl.offsetWidth;
+            console.log("video width: "+videoWidth+" | "+e.offsetX+"video width: "+videoWidth/2);
             (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
         }
 
