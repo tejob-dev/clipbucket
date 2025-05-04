@@ -511,11 +511,23 @@
         }
 
         //Event Handlers
-        function doubleClickHandler(e, playerEl){
-            console.log("current time: "+video.currentTime);
-            const videoWidth = playerEl.offsetWidth;
-            console.log("video width: "+videoWidth+" | "+e.offsetX+"video width: "+videoWidth/2);
-            (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+        function doubleClickHandler(e, playerEl, isMobile){
+            if(isMobile){
+                // Get touch position
+                const touch = e.changedTouches[0]; // Get the first touch point
+                const rect = playerEl.getBoundingClientRect();
+                const touchX = touch.clientX - rect.left; // X position within the element
+                
+                console.log("video width: " + videoWidth + " | " + touchX + " | video width/2: " + videoWidth/2);
+                
+                // Determine if touch was on left or right side
+                (touchX < videoWidth/2) ? rewindVideo() : forwardVideo();
+            }else{
+                console.log("current time: "+video.currentTime);
+                const videoWidth = playerEl.offsetWidth;
+                console.log("video width: "+videoWidth+" | "+e.offsetX+"video width: "+videoWidth/2);
+                (e.offsetX < videoWidth/2) ? rewindVideo() : forwardVideo();
+            }
         }
 
         function togglePlay(){
@@ -526,7 +538,9 @@
         $(video).on('click', togglePlay);
         console.log("video dblclick: "+video.id);
         if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            $(video).on('dblclick', doubleClickHandler);
+            $(video).on('dblclick', function(event){
+                doubleClickHandler(event, cb_player.el(), false);
+            });
         }else{
             console.log("video touch: "+video.id);
             // Variables to track taps
@@ -535,7 +549,7 @@
                 console.log('Double-click detected on desktop');
                 // Your double-click action here
                 // For example: toggle fullscreen
-                doubleClickHandler(event, cb_player.el());
+                doubleClickHandler(event, cb_player.el(), true);
                 if (cb_player.paused()) {
                     cb_player.play();
                 }
@@ -549,7 +563,7 @@
                 videoEl.addEventListener('dblclick', function(event) {
                     console.log("dblclick 2");
                     // Example action: toggle fullscreen
-                    doubleClickHandler(event, cb_player.el());
+                    doubleClickHandler(event, cb_player.el(), true);
                     if (cb_player.paused()) {
                         cb_player.play();
                     }
@@ -564,7 +578,7 @@
 
                     if (tapLength < 300 && tapLength > 0) {
                         console.log("tap length: "+tapLength);
-                        doubleClickHandler(event, cb_player.el());
+                        doubleClickHandler(event, cb_player.el(), true);
                         if (cb_player.paused()) {
                             cb_player.play();
                         }
@@ -578,7 +592,7 @@
                 videoArea.addEventListener('dblclick', function(event) {
                     console.log("dblclick 3");
                     // Your custom action
-                    doubleClickHandler(event, cb_player.el());
+                    doubleClickHandler(event, cb_player.el(), true);
                     if (cb_player.paused()) {
                         cb_player.play();
                     }
