@@ -514,6 +514,7 @@
         function doubleClickHandler(e, playerEl, isMobile){
             if(isMobile){
                 // Get touch position
+                const videoWidth = playerEl.offsetWidth;
                 const touch = e.changedTouches[0]; // Get the first touch point
                 const rect = playerEl.getBoundingClientRect();
                 const touchX = touch.clientX - rect.left; // X position within the element
