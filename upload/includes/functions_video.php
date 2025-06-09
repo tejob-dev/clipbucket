@@ -1671,10 +1671,10 @@ function separateQualityVideos($data = '')
 
         $video_play = get_video_files($vdetails,true);
         if( $vdetails['file_type'] != 'mp4' ){
-            $vurl = $video_play[0];
             // $dirVid = str_replace($vurl, 'index.m3u8', "");
-            $dirVid = dirname($vurl) . '/';
-            $content_url = file_get_contents(rtrim(config('base_url'), '/').$vurl);
+            $fileMain = DirPath::get('videos') . str_replace("/files/videos/", '', $video_play[0]);
+            $dirVid = dirname($fileMain).DIRECTORY_SEPARATOR;
+            $content_url = file_get_contents($fileMain);
 
             if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=640x360.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
                 $stream_360p = $matches[0];
