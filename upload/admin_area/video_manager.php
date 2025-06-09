@@ -178,6 +178,8 @@ foreach ($videos as $video) {
     if( $video['file_type'] != 'mp4' ){
         $video_play = get_video_files($videoTemp,true);
         $dirVid = dirname($video_play[0]) . '/';
+        var_dump($dirVid);
+        exit;
         if(file_exists($dirVid . 'index1080p.m3u8') && file_exists($dirVid . 'index320p.m3u8') ){
             $videoTemp['all_source'] = true;
         }
