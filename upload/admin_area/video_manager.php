@@ -177,7 +177,7 @@ foreach ($videos as $video) {
     $videoTemp['all_source'] = false;
     if( $video['file_type'] != 'mp4' ){
         $video_play = get_video_files($videoTemp,true);
-        $dirVid = DirPath::get('videos') . str_replace("files/videos", '', $video_play[0]) . DIRECTORY_SEPARATOR;
+        $dirVid = DirPath::get('videos') . str_replace("/files/videos/", '', $video_play[0]) . DIRECTORY_SEPARATOR;
         var_dump($dirVid);
         exit;
         if(file_exists($dirVid . 'index1080p.m3u8') && file_exists($dirVid . 'index320p.m3u8') ){
