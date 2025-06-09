@@ -1639,6 +1639,69 @@ function reConvertVideos($data = '')
 }
 
 /**
+ * Reconvert any given video in ClipBucket. It will work fine with flv as well as other older files
+ * as well. You must have at least one video quality available in system for this to work
+ *
+ * @param string $data
+ *
+ * @throws Exception
+ * @author : { Saqib Razzaq }
+ * @since : October 28th, 2016
+ */
+function separateQualityVideos($data = '')
+{
+    global $cbvid, $Upload, $myquery;
+    // $toConvert = 0;
+    // if nothing is passed in data array, read from $_POST
+    if (!is_array($data)) {
+        $data = $_POST;
+    }
+
+    // a list of videos to be reconverted
+    $videos = $data['check_video'];
+
+    if (isset($_GET['reconvert_video'])) {
+        $videos[] = $_GET['reconvert_video'];
+    }
+
+    // Loop through all video ids
+    foreach ($videos as $daVideo) {
+        // get details of single video
+        $vdetails = $cbvid->get_video($daVideo);
+
+        $video_play = get_video_files($vdetails,true);
+        if( $vdetails['file_type'] != 'mp4' ){
+            $vurl = $video_play[0];
+            // $dirVid = str_replace($vurl, 'index.m3u8', "");
+            $dirVid = dirname($vurl) . '/';
+            $content_url = file_get_contents(rtrim(config('base_url'), '/').$vurl);
+
+            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=640x360.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
+                $stream_360p = $matches[0];
+                // $file_360p = $matches[1];
+                
+                // Créer le fichier index360p.m3u8
+                $content_360p = str_replace( $stream_360p, "", $content_url);
+                file_put_contents($dirVid . 'index1080p.m3u8', $content_360p);
+            }
+
+            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=1920x1080.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
+                $stream_1080p = $matches[0];
+                // $file_1080p = $matches[1];
+                
+                // Créer le fichier index360p.m3u8
+                $content_1080p = str_replace( $stream_1080p, "", $content_url);
+                file_put_contents($dirVid . 'index320p.m3u8', $content_1080p);
+            }
+
+            // $content_url = file_get_contents(rtrim(config('base_url'), '/').$vurl);
+           
+        }
+
+    }
+}
+
+/**
  * @param $data
  * @param bool $regenerate
  * @return void

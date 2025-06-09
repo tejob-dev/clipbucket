@@ -104,6 +104,9 @@
             {$user = display_clean(lang($video.user_username))}
         {/if}
         {lang('uploaded_by_x', $user)}<br/><br/>
+        {if $video.all_source}
+            <span class="label label-success">360p, 1080p</span><br>
+        {/if}
         <div class="dropdown">
             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 Actions <i class="caret"></i>

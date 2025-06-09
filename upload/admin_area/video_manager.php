@@ -19,6 +19,10 @@ if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
     reConvertVideos();
 }
 
+if (isset($_POST['separate_quality_selected']) || isset($_GET['separate_quality_video'])) {
+    separateQualityVideos();
+}
+
 //Feature / UnFeature Video
 if (isset($_GET['make_feature'])) {
     $video = mysql_clean($_GET['make_feature']);
@@ -163,11 +167,25 @@ if (config('enable_video_categories') !='no') {
 }
 assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
+$videosTemp = [];
 $ids_to_check_progress = [];
 foreach ($videos as $video) {
     if (in_array($video['status'], ['Processing', 'Waiting'])) {
         $ids_to_check_progress[] = $video['videoid'];
     }
+    $videoTemp = $video;
+    $videoTemp['all_source'] = false;
+    if( $video['file_type'] != 'mp4' ){
+        $video_play = get_video_files($videoTemp,true);
+        $dirVid = dirname($video_play[0]) . '/';
+        if(file_exists($dirVid . 'index1080p.m3u8') && file_exists($dirVid . 'index320p.m3u8') ){
+            $videoTemp['all_source'] = true;
+        }
+        $videosTemp[] = $videoTemp;
+    }
+}
+if(!empty($videosTemp) && count($videosTemp) > 0){
+    $videos = $videosTemp;
 }
 Assign('videos', $videos);
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
