@@ -199,7 +199,11 @@
             <source src='{$file}' type="video/mp4"/>
         {else}
             {if $vdata['file_type']=='hls'}
-                <source src='{$file}' type="application/x-mpegURL"/>
+                {if $player_config.subscribed == 1}
+                    <source src='{str_replace('index.m3u8', 'index1080p.m3u8', $file)}' type="application/x-mpegURL"/>
+                {else}
+                    <source src='{str_replace('index.m3u8', 'index320p.m3u8', $file)}' type="application/x-mpegURL"/>
+                {/if}
             {else}
 				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
                 <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
