@@ -174,14 +174,17 @@ foreach ($videos as $video) {
         $ids_to_check_progress[] = $video['videoid'];
     }
     $videoTemp = $video;
-    $videoTemp['all_source'] = false;
+    $videoTemp['all_source'] = [];
     if( $video['file_type'] != 'mp4' ){
         $video_play = get_video_files($videoTemp,true);
         $dirVid = dirname(DirPath::get('videos') . str_replace("/files/videos/", '', $video_play[0])).DIRECTORY_SEPARATOR;
         // var_dump($dirVid);
         // exit;
-        if(file_exists($dirVid . 'index1080p.m3u8') && file_exists($dirVid . 'index320p.m3u8') ){
-            $videoTemp['all_source'] = true;
+        if(file_exists($dirVid . 'index1080p.m3u8')){
+            $videoTemp['all_source']['index1080p'] = true;
+        }
+        if(file_exists($dirVid . 'index320p.m3u8') ){
+            $videoTemp['all_source']['index320p'] = true;
         }
         $videosTemp[] = $videoTemp;
     }

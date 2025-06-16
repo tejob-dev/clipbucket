@@ -200,13 +200,13 @@
         {else}
             {if $vdata['file_type']=='hls'}
                 {if $player_config.subscribed == 1}
-                    {if in_array('1080p', $vquality)}      
+                    {if in_array('1080p', $v_quality)}      
                     <source src='{str_replace('index.m3u8', 'index1080p.m3u8', $file)}' type="application/x-mpegURL"/>
                     {else}
                     <source src='{$file}' type="application/x-mpegURL"/>
                     {/if}
                 {else}
-                    {if in_array('360p', $vquality) || in_array('240p', $vquality)}      
+                    {if in_array('360p', $v_quality) || in_array('240p', $v_quality)}      
                     <source src='{str_replace('index.m3u8', 'index320p.m3u8', $file)}' type="application/x-mpegURL"/>
                     {else}
                     <source src='{$file}' type="application/x-mpegURL"/>
