@@ -118,8 +118,8 @@ class CB_video_js
             }
         }
         $vdetails['title'] = self::formatVideoTitle($vdetails['title']);
-        // var_dump($vaudio);
-        // exit();
+        var_dump($vquality);
+        exit();
         assign('video_files', $video_play);
         assign('v_quality', $vquality);
         assign('v_audio', $vaudio);
