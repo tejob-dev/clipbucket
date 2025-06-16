@@ -200,9 +200,17 @@
         {else}
             {if $vdata['file_type']=='hls'}
                 {if $player_config.subscribed == 1}
+                    {if in_array('1080p', $vquality)}      
                     <source src='{str_replace('index.m3u8', 'index1080p.m3u8', $file)}' type="application/x-mpegURL"/>
+                    {else}
+                    <source src='{$file}' type="application/x-mpegURL"/>
+                    {/if}
                 {else}
+                    {if in_array('360p', $vquality) || in_array('240p', $vquality)}      
                     <source src='{str_replace('index.m3u8', 'index320p.m3u8', $file)}' type="application/x-mpegURL"/>
+                    {else}
+                    <source src='{$file}' type="application/x-mpegURL"/>
+                    {/if}
                 {/if}
             {else}
 				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
