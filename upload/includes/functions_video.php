@@ -1676,7 +1676,7 @@ function separateQualityVideos($data = '')
             $dirVid = dirname($fileMain).DIRECTORY_SEPARATOR;
             $content_url = file_get_contents($fileMain);
 
-            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=640x360.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
+            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=\d+x360.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
                 $stream_360p = $matches[0];
                 // $file_360p = $matches[1];
                 
@@ -1685,7 +1685,7 @@ function separateQualityVideos($data = '')
                 file_put_contents($dirVid . 'index1080p.m3u8', $content_360p);
             }
 
-            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=426x240.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
+            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=\d+x240.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
                 $stream_360p = $matches[0];
                 // $file_360p = $matches[1];
                 
@@ -1694,7 +1694,7 @@ function separateQualityVideos($data = '')
                 file_put_contents($dirVid . 'index1080p.m3u8', $content_360p);
             }
 
-            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=1920x1080.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
+            if(preg_match('/#EXT-X-STREAM-INF:BANDWIDTH=\d+,RESOLUTION=\d+x1080.*?\n(.*?\.m3u8)/s', $content_url, $matches)) {
                 $stream_1080p = $matches[0];
                 // $file_1080p = $matches[1];
                 
