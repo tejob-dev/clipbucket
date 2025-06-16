@@ -111,8 +111,9 @@
             {if !empty($video.all_source.index320p)}
             <span class="label label-success">360p</span><br>
             {/if}
+        {else}
+            <span class="label label-success">No format</span><br>
         {/if}
-        <span class="label label-success">{var_dump($video.all_source)}</span><br>
         <div class="dropdown">
             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 Actions <i class="caret"></i>
